@@ -1,0 +1,2290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>🌿 LoLo's Wellness Planner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg-0: #fdf6f0; --bg-1: #fceef5; --bg-2: #eef4fc; --bg-3: #f0faf2;
+            --card: #ffffff; --card-2: #fffaf5; --border: #e8d5c8;
+            --text: #2e2a24; --muted: #8a7f70;
+            --terracotta: #d4724a; --terracotta-deep: #b85a3a;
+            --rose: #e08a9e; --rose-deep: #c46a82;
+            --sage: #7da87a; --sage-deep: #5a8a58;
+            --gold: #d4a843; --gold-deep: #b88a28;
+            --plum: #9a6a9a; --plum-deep: #7a4a7a;
+            --teal: #5a9a9a; --teal-deep: #3a7a7a;
+            --sunset: #e89a5a; --sunset-deep: #d07a3a;
+            --kid1: #e08a9e; --kid2: #7da87a; --kid3: #5a9a9a; --mom: #9a6a9a;
+        }
+        html, body {
+            background: linear-gradient(135deg, #fdf6f0 0%, #fceef5 25%, #eef4fc 50%, #f0faf2 75%, #fdf6f0 100%);
+            background-attachment: fixed; min-height: 100vh; color: var(--text);
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased; padding: 20px 16px 50px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        body::before {
+            content: ''; position: fixed; inset: 0;
+            background:
+                radial-gradient(circle at 10% 15%, rgba(212,114,74,0.16) 0%, transparent 30%),
+                radial-gradient(circle at 90% 20%, rgba(224,138,158,0.16) 0%, transparent 30%),
+                radial-gradient(circle at 15% 80%, rgba(125,168,122,0.16) 0%, transparent 30%),
+                radial-gradient(circle at 85% 85%, rgba(154,106,154,0.16) 0%, transparent 30%),
+                radial-gradient(circle at 50% 50%, rgba(212,168,67,0.08) 0%, transparent 45%);
+            pointer-events: none; z-index: 0;
+        }
+        .app-header { position: relative; z-index: 1; width: 100%; max-width: 1200px; margin-bottom: 20px; text-align: center; }
+        h1 {
+            font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; font-weight: 700;
+            background: linear-gradient(90deg, var(--terracotta) 0%, var(--rose) 25%, var(--plum) 50%, var(--teal) 75%, var(--sage) 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            margin-bottom: 6px; filter: drop-shadow(0 3px 8px rgba(212,114,74,0.15));
+        }
+        .subhead { font-size: 0.78rem; font-weight: 600; color: var(--plum-deep); letter-spacing: 0.12em; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .subhead .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 8px var(--gold); }
+        .page-nav { position: relative; z-index: 1; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-bottom: 24px; width: 100%; max-width: 1200px; }
+        .nav-btn { background: var(--card); border: 1.5px solid var(--border); border-radius: 10px; padding: 9px 15px; font-size: 0.78rem; font-weight: 600; font-family: 'Outfit', sans-serif; color: var(--text); cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 0 rgba(0,0,0,0.04); }
+        .nav-btn:hover { border-color: var(--terracotta); transform: translateY(-1px); box-shadow: 0 3px 0 rgba(212,114,74,0.15); }
+        .nav-btn.active { background: linear-gradient(135deg, var(--terracotta), var(--rose-deep)); border-color: transparent; color: #fff; box-shadow: 0 3px 0 rgba(184,90,58,0.4); }
+        .nav-btn.bank-btn { border-color: #b8d4b4; color: var(--sage-deep); background: #f4faf3; }
+        .nav-btn.bank-btn.active { background: linear-gradient(135deg, var(--sage), var(--sage-deep)); border-color: transparent; color: #fff; box-shadow: 0 3px 0 rgba(90,138,88,0.4); }
+        .nav-btn.rewards-btn { border-color: #e8d0a0; color: var(--gold-deep); background: #fdf9f0; }
+        .nav-btn.rewards-btn.active { background: linear-gradient(135deg, var(--gold), var(--sunset-deep)); border-color: transparent; color: #fff; box-shadow: 0 3px 0 rgba(184,138,40,0.4); }
+        .page-content { position: relative; z-index: 1; width: 100%; max-width: 1200px; }
+        .day-title { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 700; text-align: center; margin-bottom: 6px; background: linear-gradient(90deg, var(--terracotta), var(--rose), var(--plum)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .day-progress { text-align: center; font-size: 0.75rem; font-weight: 600; color: var(--muted); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.12em; }
+        .day-progress.complete { color: var(--sage-deep); text-shadow: 0 0 12px rgba(125,168,122,0.3); }
+
+        /* WHEEL */
+        .wheel-wrap { position: relative; width: 100%; display: flex; justify-content: center; margin: 10px 0 30px; }
+        .wheel-stage { position: relative; width: 860px; height: 860px; max-width: 92vw; max-height: 92vw; }
+        .wheel-ring { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle, transparent 58%, rgba(212,114,74,0.06) 58.5%, rgba(212,114,74,0.10) 59%, transparent 60%), radial-gradient(circle, transparent 72%, rgba(154,106,154,0.05) 72.5%, rgba(154,106,154,0.09) 73%, transparent 74%), radial-gradient(circle, transparent 86%, rgba(125,168,122,0.05) 86.5%, rgba(125,168,122,0.09) 87%, transparent 88%); pointer-events: none; }
+        .wheel-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 210px; height: 210px; max-width: 26vw; max-height: 26vw; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fffaf5, #fdf0e8 60%, #f8e8de); border: 2px solid var(--border); box-shadow: 0 10px 40px rgba(212,114,74,0.12), inset 0 2px 20px rgba(255,255,255,0.9); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 14px; z-index: 2; }
+        .wheel-center .center-emoji { font-size: 2.2rem; }
+        .wheel-center .center-label { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-weight: 700; color: var(--terracotta-deep); margin-top: 6px; }
+        .wheel-center .center-sub { font-size: 0.66rem; color: var(--muted); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
+        .wheel-task { position: absolute; top: 50%; left: 50%; width: 150px; height: 150px; border-radius: 50%; background: var(--card); border: 2px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px; cursor: pointer; transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.2s; box-shadow: 0 6px 18px rgba(0,0,0,0.07); z-index: 1; overflow: hidden; }
+        .wheel-task:hover { z-index: 5; box-shadow: 0 12px 30px rgba(0,0,0,0.14); border-color: var(--terracotta); }
+        .wheel-task.kid1 { border-color: var(--kid1); background: linear-gradient(160deg, #fff, #fdf2f5); }
+        .wheel-task.kid2 { border-color: var(--kid2); background: linear-gradient(160deg, #fff, #f2f9f2); }
+        .wheel-task.kid3 { border-color: var(--kid3); background: linear-gradient(160deg, #fff, #eef7f7); }
+        .wheel-task.mom  { border-color: var(--mom);  background: linear-gradient(160deg, #fff, #f7f0f7); }
+        .wheel-task.done { opacity: 0.7; }
+        .wheel-task.done .wheel-task-text { text-decoration: line-through; color: var(--muted); }
+        .wheel-task-emoji { font-size: 1.6rem; }
+        .wheel-task-text { font-family: 'Cormorant Garamond', serif; font-size: 0.82rem; font-weight: 700; color: var(--text); margin-top: 5px; line-height: 1.15; max-height: 44px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+        .wheel-task-time { font-size: 0.62rem; font-weight: 700; color: var(--plum-deep); margin-top: 4px; background: #f8f0f8; padding: 2px 7px; border-radius: 8px; border: 1px solid #e8d8e8; white-space: nowrap; }
+        .wheel-task-check { position: absolute; top: 10px; right: 12px; width: 20px; height: 20px; border-radius: 50%; background: var(--sage); color: #fff; font-size: 0.72rem; display: flex; align-items: center; justify-content: center; }
+        .wheel-task-color-dot { position: absolute; top: 12px; left: 12px; width: 10px; height: 10px; border-radius: 50%; }
+        .wheel-legend { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; margin: 0 auto 26px; max-width: 900px; }
+        .legend-item { display: flex; align-items: center; gap: 7px; font-size: 0.76rem; font-weight: 600; color: var(--text); background: var(--card); border: 1px solid var(--border); padding: 6px 12px; border-radius: 20px; }
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .wheel-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+        .wheel-empty { text-align: center; padding: 40px 20px; color: var(--muted); font-style: italic; font-size: 0.9rem; }
+        .btn-add-wheel { background: linear-gradient(135deg, #fdf2f5, #f7f0f7); border: 1.5px dashed var(--rose); border-radius: 12px; padding: 14px 22px; font-size: 0.88rem; font-weight: 600; color: var(--rose-deep); cursor: pointer; font-family: 'Outfit', sans-serif; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-add-wheel:hover { background: linear-gradient(135deg, #fce8ee, #f0e4f0); border-style: solid; transform: translateY(-2px); }
+        .btn-add-wheel.add-task-btn { border-color: var(--sage); color: var(--sage-deep); background: linear-gradient(135deg, #f2f9f2, #eef7f0); }
+        .btn-add-wheel.add-task-btn:hover { background: linear-gradient(135deg, #e8f4e6, #e0f0e6); }
+
+        /* AREA STRIP */
+        .area-strip { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 0 auto 16px; max-width: 900px; }
+        .area-chip { display: flex; align-items: center; gap: 8px; background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 14px; font-size: 0.8rem; font-weight: 600; box-shadow: 0 2px 0 rgba(0,0,0,0.03); }
+        .area-chip .chip-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+        .area-chip .chip-name { color: var(--text); }
+        .area-chip .chip-count { font-size: 0.66rem; color: var(--muted); background: var(--card-2); padding: 2px 7px; border-radius: 8px; border: 1px solid var(--border); }
+        .area-chip .chip-add { background: var(--sage); color: #fff; border: none; border-radius: 6px; width: 24px; height: 24px; font-size: 0.85rem; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; margin-left: 2px; }
+        .area-chip .chip-add:hover { background: var(--sage-deep); }
+        .area-chip .chip-remove { background: transparent; border: none; color: var(--muted); cursor: pointer; width: 20px; height: 20px; font-size: 0.8rem; border-radius: 4px; font-family: inherit; }
+        .area-chip .chip-remove:hover { background: #fce8ee; color: var(--rose-deep); }
+
+        /* ============ MUSIC PLAYER ============ */
+        .music-section {
+            max-width: 900px; margin: 30px auto 10px;
+            background: linear-gradient(135deg, #fdf6f0, #fceef5, #f0f4fc);
+            border: 1.5px solid var(--border); border-radius: 20px;
+            padding: 20px 22px;
+            box-shadow: 0 6px 24px rgba(154,106,154,0.10);
+        }
+        .music-header {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 10px; margin-bottom: 14px;
+        }
+        .music-title {
+            font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 700;
+            color: var(--plum-deep);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .music-title .music-note-icon {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 32px; height: 32px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--rose), var(--plum));
+            color: #fff; font-size: 0.95rem;
+        }
+        .music-add-btn {
+            background: #fff; border: 1.5px solid var(--rose); border-radius: 10px;
+            padding: 8px 14px; font-size: 0.78rem; font-weight: 600; color: var(--rose-deep);
+            cursor: pointer; font-family: inherit; transition: all 0.15s ease;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .music-add-btn:hover { background: #fce8ee; transform: translateY(-1px); }
+
+        .music-list { display: flex; flex-direction: column; gap: 10px; }
+        .music-empty {
+            text-align: center; padding: 22px 16px; color: var(--muted);
+            font-style: italic; font-size: 0.85rem;
+            border: 1px dashed var(--border); border-radius: 12px;
+            background: rgba(255,255,255,0.5);
+        }
+        .music-item {
+            display: flex; align-items: center; gap: 12px;
+            background: #fff; border: 1.5px solid var(--border);
+            border-radius: 14px; padding: 10px 14px;
+            transition: all 0.18s ease;
+        }
+        .music-item:hover { border-color: var(--rose); box-shadow: 0 3px 12px rgba(224,138,158,0.15); }
+        .music-item.playing {
+            border-color: var(--plum);
+            background: linear-gradient(135deg, #faf5fc, #fdf2f5);
+            box-shadow: 0 0 0 2px rgba(154,106,154,0.15), 0 4px 16px rgba(154,106,154,0.18);
+        }
+        .music-play-btn {
+            width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
+            background: linear-gradient(135deg, var(--rose), var(--plum));
+            color: #fff; border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; transition: all 0.18s ease;
+            box-shadow: 0 3px 10px rgba(154,106,154,0.25);
+        }
+        .music-play-btn:hover { transform: scale(1.08); }
+        .music-item.playing .music-play-btn {
+            background: linear-gradient(135deg, var(--plum), var(--rose));
+            animation: musicPulse 1.6s ease infinite;
+        }
+        @keyframes musicPulse {
+            0%, 100% { box-shadow: 0 3px 10px rgba(154,106,154,0.25); }
+            50% { box-shadow: 0 3px 20px rgba(154,106,154,0.55); }
+        }
+        .music-info { flex: 1; min-width: 0; }
+        .music-name {
+            font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-weight: 700;
+            color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .music-artist {
+            font-size: 0.74rem; color: var(--muted); margin-top: 2px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .music-item.playing .music-name { color: var(--plum-deep); }
+        .music-eq {
+            display: none; align-items: flex-end; gap: 2px; height: 16px; margin-right: 4px;
+        }
+        .music-item.playing .music-eq { display: flex; }
+        .music-eq span {
+            width: 3px; background: var(--plum); border-radius: 2px;
+            animation: eqBounce 0.8s ease-in-out infinite;
+        }
+        .music-eq span:nth-child(1) { height: 6px; animation-delay: 0s; }
+        .music-eq span:nth-child(2) { height: 12px; animation-delay: 0.15s; }
+        .music-eq span:nth-child(3) { height: 8px; animation-delay: 0.3s; }
+        .music-eq span:nth-child(4) { height: 14px; animation-delay: 0.45s; }
+        @keyframes eqBounce {
+            0%, 100% { transform: scaleY(0.4); }
+            50% { transform: scaleY(1); }
+        }
+        .music-open-link {
+            font-size: 0.7rem; background: var(--sunset); color: #fff;
+            border: none; border-radius: 6px; padding: 5px 10px;
+            font-weight: 700; cursor: pointer; font-family: inherit;
+            flex-shrink: 0; text-decoration: none;
+        }
+        .music-open-link:hover { background: var(--terracotta-deep); }
+        .music-remove {
+            background: transparent; border: none; color: var(--muted);
+            font-size: 1rem; cursor: pointer; width: 26px; height: 26px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 6px; flex-shrink: 0; font-family: inherit;
+        }
+        .music-remove:hover { background: #fce8ee; color: var(--rose-deep); }
+        /* Hidden audio element per track */
+        .music-audio { display: none; }
+
+        /* Now playing bar */
+        .now-playing {
+            display: none; align-items: center; gap: 10px;
+            margin-top: 12px; padding: 10px 14px;
+            background: linear-gradient(135deg, #faf5fc, #fdf2f5);
+            border: 1.5px solid var(--plum); border-radius: 12px;
+        }
+        .now-playing.active { display: flex; }
+        .now-playing-label {
+            font-size: 0.68rem; font-weight: 700; color: var(--plum-deep);
+            text-transform: uppercase; letter-spacing: 0.1em;
+            flex-shrink: 0;
+        }
+        .now-playing-name {
+            flex: 1; font-size: 0.84rem; font-weight: 600; color: var(--text);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .now-playing-stop {
+            background: var(--plum); color: #fff; border: none; border-radius: 8px;
+            padding: 6px 12px; font-size: 0.72rem; font-weight: 700;
+            cursor: pointer; font-family: inherit; flex-shrink: 0;
+        }
+        .now-playing-stop:hover { background: var(--plum-deep); }
+
+        /* Bank music card */
+        .bank-music-card {
+            background: var(--card); border: 1.5px solid var(--border); border-radius: 14px;
+            padding: 18px; margin-bottom: 14px;
+            border-left-width: 5px; border-left-color: var(--plum);
+            box-shadow: 0 3px 0 rgba(154,106,154,0.08);
+        }
+        .bank-music-title {
+            font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 700;
+            color: var(--plum-deep); margin-bottom: 12px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .bank-music-row {
+            display: flex; align-items: center; gap: 8px;
+            background: var(--card-2); border: 1px solid var(--border);
+            border-radius: 10px; padding: 10px 12px; margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        .bank-music-input {
+            flex: 1; min-width: 100px; background: transparent; border: none;
+            border-bottom: 1px solid transparent; padding: 3px 2px;
+            font-size: 0.84rem; font-family: inherit; color: var(--text);
+        }
+        .bank-music-input.name { font-weight: 600; flex: 1.2; }
+        .bank-music-input.artist { font-size: 0.76rem; color: var(--muted); flex: 1; }
+        .bank-music-input.url { font-size: 0.72rem; color: var(--plum-deep); flex: 1.5; }
+        .bank-music-input:focus { outline: none; border-bottom-color: var(--plum); }
+        .bank-music-input::placeholder { color: #b8a8b8; }
+        .bank-music-add-row {
+            display: flex; gap: 8px; margin-top: 10px;
+            background: var(--card-2); border: 1px solid var(--border);
+            border-radius: 10px; padding: 8px;
+        }
+        .bank-music-add-row input {
+            flex: 1; min-width: 80px; background: transparent; border: none;
+            padding: 6px 8px; font-size: 0.82rem; font-family: inherit; color: var(--text);
+        }
+        .bank-music-add-row input:focus { outline: none; }
+        .bank-music-add-row input::placeholder { color: var(--muted); }
+        .bank-music-add-row button {
+            background: linear-gradient(135deg, var(--plum), var(--plum-deep));
+            border: none; border-radius: 6px; padding: 7px 14px;
+            font-weight: 700; font-size: 0.8rem; color: #fff;
+            cursor: pointer; font-family: inherit; flex-shrink: 0;
+        }
+        .bank-music-add-row button:hover { transform: translateY(-1px); }
+
+        /* DETAIL PANEL */
+        .detail-overlay { position: fixed; inset: 0; background: rgba(46,42,36,0.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; z-index: 10001; padding: 16px; animation: fadeIn 0.2s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .detail-box { background: #fff; border: 1.5px solid var(--border); border-radius: 18px; padding: 24px; max-width: 520px; width: 100%; max-height: 85vh; overflow-y: auto; box-shadow: 0 25px 70px rgba(46,42,36,0.22); animation: slideUp 0.25s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px) scale(0.97); } to { opacity: 1; transform: none; } }
+        .detail-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 18px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+        .detail-color-bar { width: 6px; align-self: stretch; border-radius: 3px; flex-shrink: 0; }
+        .detail-title { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 700; color: var(--text); line-height: 1.2; flex: 1; }
+        .detail-subject { font-size: 0.72rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
+        .detail-close { background: transparent; border: 1px solid var(--border); border-radius: 8px; width: 32px; height: 32px; font-size: 1rem; cursor: pointer; flex-shrink: 0; color: var(--muted); display: flex; align-items: center; justify-content: center; }
+        .detail-close:hover { background: #fce8ee; color: var(--rose-deep); border-color: var(--rose); }
+        .detail-section { margin-bottom: 18px; }
+        .detail-section-title { font-size: 0.7rem; font-weight: 700; color: var(--plum-deep); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+        .detail-time-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; background: var(--card-2); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; }
+        .detail-time-block { display: flex; flex-direction: column; align-items: center; background: #fff; border: 1.5px solid var(--border); border-radius: 10px; padding: 8px 16px; min-width: 96px; }
+        .detail-time-block .tl { font-size: 0.6rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+        .detail-time-block .tv { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 700; color: var(--terracotta-deep); line-height: 1.1; margin-top: 2px; }
+        .detail-time-block .tv.empty { color: var(--border); font-size: 1.1rem; }
+        .detail-time-arrow { font-size: 1.2rem; color: var(--rose-deep); font-weight: 700; }
+        .detail-duration { font-size: 0.74rem; font-weight: 600; color: var(--plum-deep); background: #f8f0f8; padding: 4px 10px; border-radius: 10px; border: 1px solid #e8d8e8; }
+        .detail-toggle-row { display: flex; align-items: center; gap: 12px; background: var(--card-2); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; }
+        .detail-toggle-btn { background: #fff; border: 1.5px solid var(--border); border-radius: 24px; padding: 8px 18px; font-size: 0.82rem; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; color: var(--muted); display: flex; align-items: center; gap: 7px; transition: all 0.2s ease; }
+        .detail-toggle-btn:hover { border-color: var(--sage); color: var(--sage-deep); }
+        .detail-toggle-btn.done { background: var(--sage); border-color: var(--sage); color: #fff; }
+        .detail-toggle-hint { font-size: 0.74rem; color: var(--muted); }
+        .detail-link-item, .detail-note-item { display: flex; align-items: center; gap: 8px; background: #fff; border: 1.5px solid var(--border); border-radius: 9px; padding: 8px 10px; margin-bottom: 7px; }
+        .detail-note-item { align-items: flex-start; }
+        .detail-link-icon { font-size: 0.9rem; flex-shrink: 0; }
+        .detail-link-input { flex: 1; border: none; background: transparent; font-size: 0.84rem; font-family: inherit; color: var(--terracotta-deep); min-width: 0; padding: 2px 0; }
+        .detail-link-input:focus { outline: none; }
+        .detail-link-input::placeholder { color: #b8a898; }
+        .detail-link-open { font-size: 0.72rem; background: var(--sunset); color: #fff; border: none; border-radius: 5px; padding: 4px 9px; font-weight: 700; cursor: pointer; font-family: inherit; flex-shrink: 0; text-decoration: none; }
+        .detail-link-open:hover { background: var(--terracotta-deep); }
+        .detail-note-textarea { flex: 1; border: none; background: transparent; font-size: 0.84rem; font-family: inherit; color: var(--text); min-width: 0; resize: vertical; min-height: 40px; padding: 2px 0; line-height: 1.45; max-height: 180px; }
+        .detail-note-textarea:focus { outline: none; }
+        .detail-note-textarea::placeholder { color: #b8a898; }
+        .detail-remove-mini { background: transparent; border: none; color: var(--muted); font-size: 0.85rem; cursor: pointer; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 5px; flex-shrink: 0; padding: 0; font-family: inherit; }
+        .detail-remove-mini:hover { background: #fce8ee; color: var(--rose-deep); }
+        .detail-add-btn { flex: 1; background: #faf8fc; border: 1px dashed var(--border); border-radius: 8px; padding: 8px 10px; font-size: 0.74rem; font-weight: 700; color: var(--plum-deep); cursor: pointer; font-family: inherit; transition: all 0.15s ease; }
+        .detail-add-btn:hover { border-color: var(--plum); background: #f0e8f8; }
+        .detail-time-edit-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+        .detail-delete-row { margin-top: 8px; text-align: center; }
+        .detail-delete-btn { background: transparent; border: 1px solid #f0c0c0; border-radius: 8px; padding: 8px 16px; font-size: 0.78rem; font-weight: 600; color: var(--rose-deep); cursor: pointer; font-family: inherit; transition: all 0.15s ease; }
+        .detail-delete-btn:hover { background: #fce8ee; border-color: var(--rose); }
+
+        /* BANK / REWARDS / MODAL / misc */
+        .bank-title { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 700; text-align: center; margin-bottom: 6px; background: linear-gradient(90deg, var(--sage), var(--teal)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .bank-sub { text-align: center; font-size: 0.8rem; color: var(--muted); margin-bottom: 20px; }
+        .btn-add-bank-subject { background: linear-gradient(135deg, #f2f9f2, #eef7f7); border: 1.5px dashed var(--sage); border-radius: 12px; padding: 16px; font-size: 0.88rem; font-weight: 600; color: var(--sage-deep); cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Outfit', sans-serif; transition: all 0.2s ease; margin-bottom: 18px; }
+        .btn-add-bank-subject:hover { background: linear-gradient(135deg, #e8f4e6, #e0f0f0); border-style: solid; transform: translateY(-2px); }
+        .bank-subject-card { background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 14px; border-left-width: 5px; border-left-color: var(--teal); }
+        .bank-subject-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+        .bank-subject-name-input { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 600; color: var(--teal-deep); background: transparent; border: 1px solid transparent; border-radius: 6px; padding: 5px 8px; flex: 1; min-width: 100px; }
+        .bank-subject-name-input:hover { border-color: var(--border); }
+        .bank-subject-name-input:focus { outline: none; border-color: var(--teal); background: #f0f8f8; }
+        .bank-item { display: flex; flex-direction: column; gap: 6px; background: var(--card-2); border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; border: 1px solid var(--border); }
+        .bank-item:hover { border-color: var(--teal); background: #f8fcfc; }
+        .bank-main-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .bank-task-input { flex: 1; font-size: 0.88rem; font-weight: 500; color: var(--text); background: transparent; border: none; border-bottom: 1px solid transparent; padding: 3px 2px; font-family: inherit; min-width: 0; }
+        .bank-task-input:focus { outline: none; border-bottom-color: var(--teal); }
+        .bank-add-row { display: flex; gap: 8px; margin-top: 10px; background: var(--card-2); border: 1px solid var(--border); border-radius: 10px; padding: 8px; }
+        .bank-add-row input { flex: 1; background: transparent; border: none; color: var(--text); font-size: 0.86rem; font-family: inherit; padding: 6px 8px; }
+        .bank-add-row input:focus { outline: none; }
+        .bank-add-row input::placeholder { color: var(--muted); }
+        .bank-add-row button { background: linear-gradient(135deg, var(--teal), var(--teal-deep)); border: none; border-radius: 6px; padding: 7px 16px; font-weight: 600; font-size: 0.82rem; color: #fff; cursor: pointer; font-family: 'Outfit', sans-serif; flex-shrink: 0; }
+        .bank-add-row button:hover { transform: translateY(-1px); }
+        .time-label { font-size: 0.72rem; font-weight: 600; color: var(--plum-deep); }
+        .time-input { font-family: 'Outfit', sans-serif; font-size: 0.82rem; font-weight: 600; color: var(--text); background: #fff; border: 1.5px solid var(--border); border-radius: 6px; padding: 4px 8px; width: 92px; }
+        .time-input:focus { outline: none; border-color: var(--rose); }
+        .time-sep { font-size: 0.8rem; color: var(--rose-deep); font-weight: 700; }
+        .btn-icon { background: transparent; border: 1.5px solid var(--border); border-radius: 6px; width: 30px; height: 30px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--muted); font-family: inherit; flex-shrink: 0; }
+        .btn-icon:hover { background: var(--rose); color: #fff; border-color: var(--rose); }
+        .task-remove { background: transparent; border: none; color: var(--muted); font-size: 0.95rem; cursor: pointer; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 5px; flex-shrink: 0; padding: 0; font-family: inherit; }
+        .task-remove:hover { background: #fce8ee; color: var(--rose-deep); }
+        .rewards-title { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 700; text-align: center; margin-bottom: 6px; background: linear-gradient(90deg, var(--gold), var(--sunset), var(--rose)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .rewards-sub { text-align: center; font-size: 0.82rem; color: var(--muted); margin-bottom: 22px; line-height: 1.6; }
+        .rewards-summary { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-bottom: 24px; }
+        .rewards-stat { background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 16px 24px; text-align: center; min-width: 110px; }
+        .rewards-stat .num { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 700; background: linear-gradient(90deg, var(--terracotta), var(--rose)); -webkit-background-clip: text; background-clip: text; color: transparent; line-height: 1; }
+        .rewards-stat .label { font-size: 0.68rem; text-transform: uppercase; font-weight: 600; color: var(--muted); margin-top: 6px; letter-spacing: 0.1em; }
+        .badges-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; margin-bottom: 26px; }
+        .badge-card { background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; padding: 18px 10px; text-align: center; position: relative; }
+        .badge-card.earned { border-color: var(--gold); background: linear-gradient(160deg, #fdfaf0, #fdf3dc); }
+        .badge-emoji { font-size: 2.6rem; filter: grayscale(1) opacity(0.25); }
+        .badge-card.earned .badge-emoji { filter: none; }
+        .badge-name { font-family: 'Cormorant Garamond', serif; font-size: 0.95rem; font-weight: 700; margin-top: 8px; color: var(--text); }
+        .badge-card.earned .badge-name { color: var(--gold-deep); }
+        .badge-day { font-size: 0.62rem; color: var(--muted); margin-top: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
+        .badge-lock { position: absolute; top: 8px; right: 10px; font-size: 0.8rem; opacity: 0.4; }
+        .badge-card.earned .badge-lock { display: none; }
+        .badge-check { position: absolute; top: 8px; right: 10px; font-size: 0.85rem; }
+        .gift-section { background: var(--card); border: 1.5px dashed var(--gold); border-radius: 16px; padding: 20px; }
+        .gift-title { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 700; color: var(--gold-deep); text-align: center; margin-bottom: 6px; }
+        .gift-desc { text-align: center; font-size: 0.8rem; color: var(--muted); margin-bottom: 16px; line-height: 1.6; }
+        .gift-progress-outer { background: #fdf5e4; border: 1px solid #e8d8b0; border-radius: 8px; height: 10px; overflow: hidden; margin-bottom: 8px; }
+        .gift-progress-inner { height: 100%; border-radius: 8px; width: 0%; background: linear-gradient(90deg, var(--gold), var(--sunset), var(--rose)); transition: width 0.5s ease; }
+        .gift-progress-label { text-align: center; font-size: 0.78rem; font-weight: 600; color: var(--gold-deep); }
+        .gift-unlock { text-align: center; padding: 14px; margin-top: 12px; background: #fdfaf3; border-radius: 10px; border: 1px solid #ecdcb8; }
+        .gift-unlock .gift-emoji { font-size: 2.1rem; }
+        .gift-unlock .gift-msg { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 700; color: var(--gold-deep); margin-top: 6px; }
+        .gift-unlock .gift-hint { font-size: 0.72rem; color: var(--muted); margin-top: 4px; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(46,42,36,0.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; z-index: 10001; padding: 16px; animation: fadeIn 0.2s ease; }
+        .modal-box { background: #fff; border: 1.5px solid var(--rose); border-radius: 16px; padding: 24px; max-width: 440px; width: 100%; max-height: 80vh; overflow-y: auto; }
+        .modal-title { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.4rem; color: var(--text); margin-bottom: 18px; text-align: center; }
+        .modal-item { display: block; width: 100%; text-align: left; background: var(--card-2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; font-size: 0.9rem; font-family: inherit; color: var(--text); cursor: pointer; margin-bottom: 8px; font-weight: 500; }
+        .modal-item:hover { background: #fdf2f5; border-color: var(--rose); }
+        .modal-item.special { background: #f4faf3; border-color: var(--sage); color: var(--sage-deep); font-weight: 600; }
+        .modal-item.special:hover { background: #e8f4e6; }
+        .modal-item .modal-meta { display: block; font-size: 0.7rem; color: var(--muted); font-weight: 500; margin-top: 3px; }
+        .modal-empty { text-align: center; color: var(--muted); padding: 20px; font-size: 0.85rem; line-height: 1.6; }
+        .modal-cancel { display: block; width: 100%; background: transparent; border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-weight: 600; font-size: 0.85rem; color: var(--muted); cursor: pointer; margin-top: 8px; font-family: inherit; }
+        .modal-cancel:hover { background: var(--card-2); color: var(--text); }
+        .modal-subtitle { font-size: 0.74rem; color: var(--muted); text-align: center; margin-top: -10px; margin-bottom: 16px; }
+        .celebration-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: flex; align-items: center; justify-content: center; z-index: 9999; visibility: hidden; }
+        .celebration-overlay.active { visibility: visible; animation: popFade 1.8s ease forwards; }
+        .confetti-burst { font-size: 4rem; animation: floatUp 1.6s ease-out; display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; align-items: center; }
+        @keyframes popFade { 0% { opacity: 0; transform: scale(0.7); } 20% { opacity: 1; transform: scale(1.05); } 40% { transform: scale(1); } 70% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
+        @keyframes floatUp { 0% { transform: translateY(30px); opacity: 0; } 20% { opacity: 1; transform: translateY(-10px); } 60% { transform: translateY(-30px); } 100% { transform: translateY(-80px); opacity: 0; } }
+        .full-day-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, rgba(212,114,74,0.95), rgba(122,90,122,0.95)); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10000; visibility: hidden; pointer-events: none; text-align: center; padding: 20px; }
+        .full-day-overlay.active { visibility: visible; animation: fullDayAnim 3.4s ease forwards; }
+        @keyframes fullDayAnim { 0% { opacity: 0; transform: scale(0.6); } 15% { opacity: 1; transform: scale(1.03); } 25% { transform: scale(1); } 80% { opacity: 1; } 100% { opacity: 0; transform: scale(1.1); } }
+        .full-day-overlay .big-emoji { font-size: 6rem; animation: bounceBig 0.8s ease infinite alternate; filter: drop-shadow(0 0 30px rgba(212,168,67,0.6)); }
+        @keyframes bounceBig { from { transform: translateY(0) scale(1); } to { transform: translateY(-18px) scale(1.05); } }
+        .full-day-overlay .msg { font-family: 'Cormorant Garamond', serif; font-size: 2.6rem; font-weight: 700; color: #fff; margin: 18px 0 14px; text-shadow: 0 4px 18px rgba(0,0,0,0.2); }
+        .full-day-overlay .sub-msg { font-size: 1rem; font-weight: 500; color: var(--text); background: #fff; padding: 12px 26px; border-radius: 30px; }
+        .full-day-overlay .badge-earned { margin-top: 18px; background: rgba(255,255,255,0.2); border: 1.5px solid rgba(255,255,255,0.4); padding: 12px 22px; border-radius: 30px; display: flex; align-items: center; gap: 8px; color: #fff; font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 600; }
+        .footer-note { position: relative; z-index: 1; margin-top: 30px; font-size: 0.7rem; color: var(--muted); text-align: center; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; }
+        .music-toggle { position: fixed; bottom: 20px; right: 20px; z-index: 10002; background: var(--card); border: 1.5px solid var(--border); border-radius: 50%; width: 48px; height: 48px; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 12px rgba(0,0,0,0.12); transition: all 0.2s ease; }
+        .music-toggle:hover { transform: scale(1.08); border-color: var(--rose); }
+        .music-toggle.playing { background: var(--rose); color: #fff; border-color: var(--rose); }
+        @media (max-width: 640px) {
+            h1 { font-size: 2rem; }
+            .day-title { font-size: 1.7rem; }
+            .bank-title, .rewards-title { font-size: 1.6rem; }
+            .nav-btn { padding: 8px 11px; font-size: 0.72rem; }
+            .full-day-overlay .msg { font-size: 1.9rem; }
+            .badges-grid { grid-template-columns: repeat(2, 1fr); }
+            .wheel-task { width: 108px; height: 108px; padding: 6px; }
+            .wheel-task-emoji { font-size: 1.2rem; }
+            .wheel-task-text { font-size: 0.68rem; max-height: 34px; }
+            .wheel-task-time { font-size: 0.54rem; padding: 1px 5px; }
+            .wheel-center { width: 150px; height: 150px; padding: 8px; }
+            .wheel-center .center-emoji { font-size: 1.6rem; }
+            .wheel-center .center-label { font-size: 0.95rem; }
+            .music-section { padding: 16px; }
+            .music-title { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-header">
+        <h1>🌿 LoLo's Wellness Planner</h1>
+        <div class="subhead">
+            <span class="dot"></span>
+            <span>Self-Care · Family · Well-Being · Music</span>
+            <span class="dot"></span>
+        </div>
+    </div>
+    <div class="page-nav" id="pageNav"></div>
+    <div class="page-content" id="pageContent"></div>
+    <div class="footer-note">✦ Tap any task on the wheel to see its times, links & notes · Add music to your day ✦</div>
+    <button class="music-toggle" id="musicToggle" title="Toggle ambient music">🎵</button>
+    <div class="celebration-overlay" id="celebration"><div class="confetti-burst" id="confettiBurst">🌿✨🌸</div></div>
+    <div class="full-day-overlay" id="fullDayOverlay">
+        <div class="big-emoji" id="fullDayEmoji">🌿</div>
+        <div class="msg" id="fullDayMsg">A DAY WELL LIVED</div>
+        <div class="sub-msg" id="fullDaySubMsg">All tasks complete!</div>
+        <div class="badge-earned" id="fullDayBadge" style="display:none;"></div>
+    </div>
+
+    <script>
+    (function() {
+        'use strict';
+
+        const DAYS = [
+            { name: 'Monday', emoji: '🌅', badge: '☀️', badgeName: 'Gentle Start' },
+            { name: 'Tuesday', emoji: '🌿', badge: '🌿', badgeName: 'Nourish' },
+            { name: 'Wednesday', emoji: '💧', badge: '💧', badgeName: 'Hydrate' },
+            { name: 'Thursday', emoji: '🌱', badge: '🌱', badgeName: 'Grow' },
+            { name: 'Friday', emoji: '🌻', badge: '🌻', badgeName: 'Bloom' },
+            { name: 'Saturday', emoji: '🕯️', badge: '🕯️', badgeName: 'Slow Down' },
+            { name: 'Sunday', emoji: '🕊️', badge: '🕊️', badgeName: 'Rest & Restore' }
+        ];
+        const GIFTS = [
+            { required: 3, emoji: '🧖‍♀️', name: 'A Quiet Evening', hint: 'Earn 3 badges' },
+            { required: 5, emoji: '💆‍♀️', name: 'A Spa Day', hint: 'Earn 5 badges' },
+            { required: 7, emoji: '🌺', name: 'A Weekend Retreat', hint: 'Earn all 7 badges' }
+        ];
+        const CATEGORY_META = {
+            kid1: { emoji: '👧', color: '#e08a9e', label: 'Emma' },
+            kid2: { emoji: '👦', color: '#7da87a', label: 'Leo' },
+            kid3: { emoji: '🧒', color: '#5a9a9a', label: 'Mia' },
+            mom:  { emoji: '🌿', color: '#9a6a9a', label: 'Me-Time' },
+            '':   { emoji: '📌', color: '#d4a843', label: 'General' }
+        };
+
+        let subjectBank = [];
+        let days = [];
+        let badges = {};
+        let musicLibrary = [];    // { id, name, artist, url }
+        let dayMusic = [];        // per day: array of musicLibrary IDs (or { id, refId } copies)
+        let nextId = 1;
+        function genId() { return 'id_' + (nextId++) + '_' + Math.random().toString(36).slice(2,7); }
+        const STORAGE_KEY = 'lolosWheelPlanner_v3';
+
+        // The currently-playing audio element + track id
+        let currentAudio = null;
+        let currentTrackId = null;
+        let currentTrackDayIdx = null;
+
+        function saveToStorage() {
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ subjectBank, days, badges, musicLibrary, dayMusic, nextId })); } catch(e) {}
+        }
+        function loadFromStorage() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return;
+                const data = JSON.parse(raw);
+                if (data && Array.isArray(data.subjectBank) && Array.isArray(data.days) && data.days.length === 7) {
+                    subjectBank = data.subjectBank;
+                    days = data.days;
+                    badges = data.badges || {};
+                    musicLibrary = Array.isArray(data.musicLibrary) ? data.musicLibrary : [];
+                    dayMusic = Array.isArray(data.dayMusic) ? data.dayMusic : [[], [], [], [], [], [], []];
+                    nextId = data.nextId || 1;
+                    for (let d = 0; d < 7; d++) if (!Array.isArray(days[d])) days[d] = [];
+                    for (let d = 0; d < 7; d++) if (!Array.isArray(dayMusic[d])) dayMusic[d] = [];
+                    days.forEach(function(dayArr) {
+                        dayArr.forEach(function(subj) {
+                            (subj.tasks || []).forEach(function(task) {
+                                if (!Array.isArray(task.links)) task.links = [];
+                                if (!Array.isArray(task.notes)) task.notes = [];
+                                if (!task.from) task.from = '';
+                                if (!task.to) task.to = '';
+                            });
+                        });
+                    });
+                    subjectBank.forEach(function(bs) {
+                        (bs.tasks || []).forEach(function(task) {
+                            if (!Array.isArray(task.links)) task.links = [];
+                            if (!Array.isArray(task.notes)) task.notes = [];
+                            if (!task.from) task.from = '';
+                            if (!task.to) task.to = '';
+                        });
+                    });
+                }
+            } catch(e) {}
+        }
+
+        // AUDIO
+        let audioCtx = null;
+        function getCtx() {
+            if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {} }
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+            return audioCtx;
+        }
+        function playClick() {
+            const ctx = getCtx(); if (!ctx) return;
+            const now = ctx.currentTime;
+            const osc = ctx.createOscillator(); const gain = ctx.createGain();
+            osc.type = 'sine'; osc.frequency.setValueAtTime(720, now);
+            gain.gain.setValueAtTime(0, now);
+            gain.gain.linearRampToValueAtTime(0.05, now + 0.005);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.06);
+            osc.connect(gain); gain.connect(ctx.destination);
+            osc.start(now); osc.stop(now + 0.07);
+        }
+        function playOpen() {
+            const ctx = getCtx(); if (!ctx) return;
+            const now = ctx.currentTime;
+            [520, 680].forEach(function(freq, i) {
+                const osc = ctx.createOscillator(); const g = ctx.createGain();
+                osc.type = 'sine'; osc.frequency.value = freq;
+                g.gain.setValueAtTime(0, now + i * 0.04);
+                g.gain.linearRampToValueAtTime(0.035, now + i * 0.04 + 0.01);
+                g.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.04 + 0.15);
+                osc.connect(g); g.connect(ctx.destination);
+                osc.start(now + i * 0.04); osc.stop(now + i * 0.04 + 0.16);
+            });
+        }
+        function playClose() {
+            const ctx = getCtx(); if (!ctx) return;
+            const now = ctx.currentTime;
+            [480, 360].forEach(function(freq, i) {
+                const osc = ctx.createOscillator(); const g = ctx.createGain();
+                osc.type = 'sine'; osc.frequency.value = freq;
+                g.gain.setValueAtTime(0, now + i * 0.04);
+                g.gain.linearRampToValueAtTime(0.03, now + i * 0.04 + 0.01);
+                g.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.04 + 0.13);
+                osc.connect(g); g.connect(ctx.destination);
+                osc.start(now + i * 0.04); osc.stop(now + i * 0.04 + 0.14);
+            });
+        }
+        function playAdd() {
+            const ctx = getCtx(); if (!ctx) return;
+            const now = ctx.currentTime;
+            [600, 800, 1000].forEach(function(freq, i) {
+                const osc = ctx.createOscillator(); const g = ctx.createGain();
+                osc.type = 'sine'; osc.frequency.value = freq;
+                g.gain.setValueAtTime(0, now + i * 0.05);
+                g.gain.linearRampToValueAtTime(0.04, now + i * 0.05 + 0.01);
+                g.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.05 + 0.18);
+                osc.connect(g); g.connect(ctx.destination);
+                osc.start(now + i * 0.05); osc.stop(now + i * 0.05 + 0.19);
+            });
+        }
+        function playRemove() {
+            const ctx = getCtx(); if (!ctx) return;
+            const now = ctx.currentTime;
+            const osc = ctx.createOscillator(); const g = ctx.createGain();
+            osc.type = 'sine'; osc.frequency.setValueAtTime(420, now);
+            osc.frequency.exponentialRampToValueAtTime(300, now + 0.12);
+            g.gain.setValueAtTime(0.05, now);
+            g.gain.exponentialRampToValueAtTime(0.0001, now + 0.14);
+            osc.connect(g); g.connect(ctx.destination);
+            osc.start(now); osc.stop(now + 0.15);
+        }
+        function playTaskComplete() {
+            const ctx = getCtx(); if (!ctx) return;
+            const now = ctx.currentTime;
+            [{ f: 523.25, t: 0.00, d: 0.55 }, { f: 659.25, t: 0.12, d: 0.55 }, { f: 783.99, t: 0.24, d: 0.60 }, { f: 1046.50, t: 0.38, d: 0.75 }, { f: 1318.51, t: 0.55, d: 0.90 }].forEach(function(n) {
+                const osc = ctx.createOscillator(); const g = ctx.createGain();
+                osc.type = 'triangle'; osc.frequency.value = n.f;
+                g.gain.setValueAtTime(0, now + n.t);
+                g.gain.linearRampToValueAtTime(0.075, now + n.t + 0.04);
+                g.gain.exponentialRampToValueAtTime(0.0001, now + n.t + n.d);
+                osc.connect(g); g.connect(ctx.destination);
+                osc.start(now + n.t); osc.stop(now + n.t + n.d + 0.05);
+            });
+        }
+        function playTaskUncheck() {
+            const ctx = getCtx(); if (!ctx) return;
+            const now = ctx.currentTime;
+            [440, 330].forEach(function(freq, i) {
+                const osc = ctx.createOscillator(); const g = ctx.createGain();
+                osc.type = 'sine'; osc.frequency.value = freq;
+                g.gain.setValueAtTime(0, now + i * 0.08);
+                g.gain.linearRampToValueAtTime(0.04, now + i * 0.08 + 0.01);
+                g.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.08 + 0.25);
+                osc.connect(g); g.connect(ctx.destination);
+                osc.start(now + i * 0.08); osc.stop(now + i * 0.08 + 0.26);
+            });
+        }
+        function playDayComplete() {
+            const ctx = getCtx(); if (!ctx) return;
+            const now = ctx.currentTime;
+            [{ f: 392.00, t: 0.00, d: 0.5 }, { f: 523.25, t: 0.18, d: 0.5 }, { f: 659.25, t: 0.36, d: 0.5 }, { f: 783.99, t: 0.54, d: 0.6 }, { f: 1046.50, t: 0.78, d: 1.0 }, { f: 1318.51, t: 1.05, d: 1.2 }].forEach(function(n) {
+                const osc = ctx.createOscillator(); const g = ctx.createGain();
+                osc.type = 'triangle'; osc.frequency.value = n.f;
+                g.gain.setValueAtTime(0, now + n.t);
+                g.gain.linearRampToValueAtTime(0.08, now + n.t + 0.05);
+                g.gain.exponentialRampToValueAtTime(0.0001, now + n.t + n.d);
+                osc.connect(g); g.connect(ctx.destination);
+                osc.start(now + n.t); osc.stop(now + n.t + n.d + 0.1);
+            });
+            const pad = ctx.createOscillator(); const pg = ctx.createGain();
+            pad.type = 'sine'; pad.frequency.value = 261.63;
+            pg.gain.setValueAtTime(0, now);
+            pg.gain.linearRampToValueAtTime(0.04, now + 0.3);
+            pg.gain.exponentialRampToValueAtTime(0.0001, now + 2.0);
+            pad.connect(pg); pg.connect(ctx.destination);
+            pad.start(now); pad.stop(now + 2.1);
+        }
+
+        // AMBIENT
+        let ambientNodes = null, musicOn = false;
+        function startAmbientMusic() {
+            const ctx = getCtx(); if (!ctx || ambientNodes) return;
+            const now = ctx.currentTime;
+            const master = ctx.createGain();
+            master.gain.setValueAtTime(0, now);
+            master.gain.linearRampToValueAtTime(0.045, now + 3);
+            master.connect(ctx.destination);
+            const nodes = [];
+            [130.81, 164.81, 196.00, 246.94].forEach(function(freq, i) {
+                const osc = ctx.createOscillator(); const g = ctx.createGain();
+                const lfo = ctx.createOscillator(); const lfoGain = ctx.createGain();
+                osc.type = i % 2 === 0 ? 'sine' : 'triangle';
+                osc.frequency.value = freq;
+                g.gain.value = 0.25 / 4;
+                lfo.frequency.value = 0.08 + i * 0.02;
+                lfoGain.gain.value = 0.5 + i * 0.2;
+                lfo.connect(lfoGain); lfoGain.connect(osc.frequency);
+                lfo.start(); osc.connect(g); g.connect(master); osc.start();
+                nodes.push({ osc, g, lfo });
+            });
+            [523.25, 659.25, 783.99].forEach(function(freq, i) {
+                const osc = ctx.createOscillator(); const g = ctx.createGain();
+                const lfo = ctx.createOscillator(); const lfoGain = ctx.createGain();
+                osc.type = 'sine'; osc.frequency.value = freq;
+                g.gain.value = 0.10 / 3;
+                lfo.frequency.value = 0.05 + i * 0.015;
+                lfoGain.gain.value = 1.2;
+                lfo.connect(lfoGain); lfoGain.connect(osc.frequency);
+                lfo.start(); osc.connect(g); g.connect(master); osc.start();
+                nodes.push({ osc, g, lfo });
+            });
+            ambientNodes = { master, nodes };
+        }
+        function stopAmbientMusic() {
+            if (!ambientNodes) return;
+            const ctx = getCtx(); if (!ctx) return;
+            const now = ctx.currentTime;
+            const a = ambientNodes;
+            a.master.gain.cancelScheduledValues(now);
+            a.master.gain.setValueAtTime(a.master.gain.value, now);
+            a.master.gain.exponentialRampToValueAtTime(0.0001, now + 2.0);
+            setTimeout(function() {
+                a.nodes.forEach(function(n) { try { n.osc.stop(); n.lfo.stop(); } catch(e) {} });
+                try { a.master.disconnect(); } catch(e) {}
+            }, 2200);
+            ambientNodes = null;
+        }
+        function toggleMusic() {
+            const btn = document.getElementById('musicToggle');
+            musicOn = !musicOn;
+            if (musicOn) { startAmbientMusic(); btn.classList.add('playing'); btn.textContent = '🔊'; }
+            else { stopAmbientMusic(); btn.classList.remove('playing'); btn.textContent = '🎵'; }
+        }
+        document.getElementById('musicToggle').addEventListener('click', function() { playClick(); toggleMusic(); });
+
+        // CELEBRATIONS
+        const celebrationOverlay = document.getElementById('celebration');
+        const confettiBurst = document.getElementById('confettiBurst');
+        const fullDayOverlay = document.getElementById('fullDayOverlay');
+        const fullDayEmoji = document.getElementById('fullDayEmoji');
+        const fullDayMsg = document.getElementById('fullDayMsg');
+        const fullDaySubMsg = document.getElementById('fullDaySubMsg');
+        const fullDayBadge = document.getElementById('fullDayBadge');
+        function celebrate() {
+            playTaskComplete();
+            const emojis = ['🌿','🌸','✨','🌱','💧','🌻','🕊️','🌺','☕','🕯️'];
+            let html = '';
+            for (let i = 0; i < 10; i++) html += emojis[Math.floor(Math.random() * emojis.length)];
+            confettiBurst.textContent = html;
+            celebrationOverlay.classList.remove('active');
+            void celebrationOverlay.offsetWidth;
+            celebrationOverlay.classList.add('active');
+            setTimeout(function() { celebrationOverlay.classList.remove('active'); }, 1800);
+        }
+        const fullDayRewards = [
+            { emoji: '🌿', msg: 'A DAY WELL LIVED', sub: 'You showed up for yourself today.' },
+            { emoji: '🌸', msg: 'GENTLE & STRONG', sub: 'Every task, a small act of care.' },
+            { emoji: '✨', msg: 'YOU MATTER', sub: 'And you made time for yourself.' },
+            { emoji: '🕊️', msg: 'IN BALANCE', sub: 'Family and self — both held.' },
+            { emoji: '🌺', msg: 'BEAUTIFULLY DONE', sub: 'A full day of caring.' }
+        ];
+        function celebrateFullDay(dayIdx) {
+            playDayComplete();
+            const r = fullDayRewards[Math.floor(Math.random() * fullDayRewards.length)];
+            fullDayEmoji.textContent = r.emoji;
+            fullDayMsg.textContent = r.msg;
+            fullDaySubMsg.textContent = r.sub;
+            if (dayIdx !== undefined && DAYS[dayIdx]) {
+                fullDayBadge.style.display = 'flex';
+                fullDayBadge.innerHTML = '<span style="font-size:1.3rem;">' + DAYS[dayIdx].badge + '</span><span>Badge earned: ' + DAYS[dayIdx].badgeName + '</span>';
+            } else {
+                fullDayBadge.style.display = 'none';
+            }
+            fullDayOverlay.classList.remove('active');
+            void fullDayOverlay.offsetWidth;
+            fullDayOverlay.classList.add('active');
+            setTimeout(function() { fullDayOverlay.classList.remove('active'); }, 3400);
+        }
+
+        // NAV
+        let currentPage = 'day0';
+        const pageNav = document.getElementById('pageNav');
+        const pageContent = document.getElementById('pageContent');
+        function renderNav() {
+            pageNav.innerHTML = '';
+            DAYS.forEach(function(day, idx) {
+                const btn = document.createElement('button');
+                btn.className = 'nav-btn' + (currentPage === 'day' + idx ? ' active' : '');
+                btn.innerHTML = day.emoji + ' ' + day.name;
+                btn.addEventListener('click', function() { playClick(); goToPage('day' + idx); });
+                pageNav.appendChild(btn);
+            });
+            const bankBtn = document.createElement('button');
+            bankBtn.className = 'nav-btn bank-btn' + (currentPage === 'bank' ? ' active' : '');
+            bankBtn.innerHTML = '📋 Task Library';
+            bankBtn.addEventListener('click', function() { playClick(); goToPage('bank'); });
+            pageNav.appendChild(bankBtn);
+            const rewardsBtn = document.createElement('button');
+            rewardsBtn.className = 'nav-btn rewards-btn' + (currentPage === 'rewards' ? ' active' : '');
+            rewardsBtn.innerHTML = '🏆 Milestones';
+            rewardsBtn.addEventListener('click', function() { playClick(); goToPage('rewards'); });
+            pageNav.appendChild(rewardsBtn);
+        }
+        function goToPage(pageId) { currentPage = pageId; renderNav(); renderPage(); }
+        function renderPage() {
+            pageContent.innerHTML = '';
+            if (currentPage === 'bank') pageContent.appendChild(renderBankPage());
+            else if (currentPage === 'rewards') pageContent.appendChild(renderRewardsPage());
+            else {
+                const dayIdx = parseInt(currentPage.replace('day', ''), 10);
+                pageContent.appendChild(renderDayPage(dayIdx));
+            }
+        }
+
+        // HELPERS
+        function format12h(t) {
+            if (!t) return '';
+            const parts = t.split(':');
+            if (parts.length < 2) return t;
+            let h = parseInt(parts[0], 10);
+            const m = parts[1];
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            if (h === 0) h = 12;
+            else if (h > 12) h -= 12;
+            return h + ':' + m + ' ' + ampm;
+        }
+        function timeToMinutes(t) {
+            if (!t) return null;
+            const parts = t.split(':');
+            if (parts.length < 2) return null;
+            return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+        }
+        function durationLabel(from, to) {
+            if (!from || !to) return '';
+            let a = timeToMinutes(from), b = timeToMinutes(to);
+            if (a === null || b === null) return '';
+            let diff = b - a;
+            if (diff < 0) diff += 24 * 60;
+            if (diff === 0) return '0 min';
+            const h = Math.floor(diff / 60), m = diff % 60;
+            if (h === 0) return m + ' min';
+            if (m === 0) return h + 'h';
+            return h + 'h ' + m + 'm';
+        }
+        function getCategoryForDaySubject(daySubject) {
+            const bank = subjectBank.find(function(s) { return s.id === daySubject.bankSubjectId; });
+            if (!bank) return '';
+            if (bank.category) return bank.category;
+            const n = bank.name.toLowerCase();
+            if (n.includes('emma')) return 'kid1';
+            if (n.includes('leo')) return 'kid2';
+            if (n.includes('mia')) return 'kid3';
+            if (n.includes('mom') || n.includes('me') || n.includes('self') || n.includes('wellness')) return 'mom';
+            return '';
+        }
+
+        // ================= MUSIC PLAYER =================
+        function stopCurrentAudio() {
+            if (currentAudio) {
+                try { currentAudio.pause(); currentAudio.src = ''; } catch(e) {}
+                currentAudio = null;
+            }
+            currentTrackId = null;
+            currentTrackDayIdx = null;
+        }
+
+        function playMusicTrack(trackId, dayIdx) {
+            const track = musicLibrary.find(function(t) { return t.id === trackId; });
+            if (!track) return;
+            if (currentTrackId === trackId) {
+                // Toggle off
+                stopCurrentAudio();
+                renderPage();
+                return;
+            }
+            stopCurrentAudio();
+            if (!track.url) {
+                alert('This track has no audio URL set. Edit it in the Task Library.');
+                return;
+            }
+            currentAudio = new Audio(track.url);
+            currentAudio.loop = true;
+            currentAudio.volume = 0.6;
+            currentAudio.play().catch(function(err) {
+                alert('Could not play this track. Check the audio URL.\n\n' + (err && err.message ? err.message : ''));
+                stopCurrentAudio();
+                renderPage();
+            });
+            currentTrackId = trackId;
+            currentTrackDayIdx = dayIdx;
+            renderPage();
+        }
+
+        function renderMusicSection(dayIdx) {
+            const wrap = document.createElement('div');
+            wrap.className = 'music-section';
+
+            const header = document.createElement('div');
+            header.className = 'music-header';
+            const title = document.createElement('div');
+            title.className = 'music-title';
+            title.innerHTML = '<span class="music-note-icon">🎵</span> My Music';
+            header.appendChild(title);
+
+            const addBtn = document.createElement('button');
+            addBtn.type = 'button';
+            addBtn.className = 'music-add-btn';
+            addBtn.textContent = '＋ Add music';
+            addBtn.addEventListener('click', function() {
+                playAdd();
+                openMusicPicker(dayIdx);
+            });
+            header.appendChild(addBtn);
+            wrap.appendChild(header);
+
+            const listWrap = document.createElement('div');
+            listWrap.className = 'music-list';
+
+            const dayTracks = dayMusic[dayIdx] || [];
+            if (dayTracks.length === 0) {
+                const empty = document.createElement('div');
+                empty.className = 'music-empty';
+                empty.textContent = 'No music added to this day yet. Tap "＋ Add music" to choose a track from your library.';
+                listWrap.appendChild(empty);
+            } else {
+                dayTracks.forEach(function(entry, index) {
+                    const track = musicLibrary.find(function(t) { return t.id === entry.musicId; });
+                    if (!track) return;
+                    const isPlaying = currentTrackId === track.id;
+                    const item = document.createElement('div');
+                    item.className = 'music-item' + (isPlaying ? ' playing' : '');
+
+                    const playBtn = document.createElement('button');
+                    playBtn.type = 'button';
+                    playBtn.className = 'music-play-btn';
+                    playBtn.textContent = isPlaying ? '⏸' : '▶';
+                    playBtn.title = isPlaying ? 'Stop' : 'Play';
+                    playBtn.addEventListener('click', function() {
+                        playClick();
+                        playMusicTrack(track.id, dayIdx);
+                    });
+                    item.appendChild(playBtn);
+
+                    const eq = document.createElement('div');
+                    eq.className = 'music-eq';
+                    eq.innerHTML = '<span></span><span></span><span></span><span></span>';
+                    item.appendChild(eq);
+
+                    const info = document.createElement('div');
+                    info.className = 'music-info';
+                    const nameEl = document.createElement('div');
+                    nameEl.className = 'music-name';
+                    nameEl.textContent = track.name || 'Untitled';
+                    info.appendChild(nameEl);
+                    if (track.artist) {
+                        const artistEl = document.createElement('div');
+                        artistEl.className = 'music-artist';
+                        artistEl.textContent = track.artist;
+                        info.appendChild(artistEl);
+                    }
+                    item.appendChild(info);
+
+                    if (track.url) {
+                        const openLink = document.createElement('a');
+                        openLink.className = 'music-open-link';
+                        openLink.textContent = 'Source';
+                        openLink.href = 'javascript:void(0)';
+                        openLink.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            playClick();
+                            window.open(track.url, '_blank', 'noopener,noreferrer');
+                        });
+                        item.appendChild(openLink);
+                    }
+
+                    const rmBtn = document.createElement('button');
+                    rmBtn.type = 'button';
+                    rmBtn.className = 'music-remove';
+                    rmBtn.textContent = '✕';
+                    rmBtn.title = 'Remove from this day';
+                    rmBtn.addEventListener('click', function() {
+                        if (confirm('Remove this track from ' + DAYS[dayIdx].name + '?')) {
+                            playRemove();
+                            dayMusic[dayIdx].splice(index, 1);
+                            if (currentTrackId === track.id && currentTrackDayIdx === dayIdx) {
+                                stopCurrentAudio();
+                            }
+                            saveToStorage();
+                            renderPage();
+                        }
+                    });
+                    item.appendChild(rmBtn);
+
+                    listWrap.appendChild(item);
+                });
+            }
+            wrap.appendChild(listWrap);
+
+            // Now Playing bar
+            if (currentAudio && currentTrackId) {
+                const track = musicLibrary.find(function(t) { return t.id === currentTrackId; });
+                if (track) {
+                    const np = document.createElement('div');
+                    np.className = 'now-playing active';
+                    np.innerHTML = '<span class="now-playing-label">▶ Now Playing</span>' +
+                        '<span class="now-playing-name">' + (track.name || 'Untitled') + (track.artist ? ' · ' + track.artist : '') + '</span>';
+                    const stopBtn = document.createElement('button');
+                    stopBtn.type = 'button';
+                    stopBtn.className = 'now-playing-stop';
+                    stopBtn.textContent = '⏹ Stop';
+                    stopBtn.addEventListener('click', function() {
+                        playClick();
+                        stopCurrentAudio();
+                        renderPage();
+                    });
+                    np.appendChild(stopBtn);
+                    wrap.appendChild(np);
+                }
+            }
+
+            return wrap;
+        }
+
+        function openMusicPicker(dayIdx) {
+            const overlay = document.createElement('div');
+            overlay.className = 'modal-overlay';
+            const box = document.createElement('div');
+            box.className = 'modal-box';
+            const h = document.createElement('div');
+            h.className = 'modal-title';
+            h.textContent = 'Add music to ' + DAYS[dayIdx].name;
+            box.appendChild(h);
+
+            if (musicLibrary.length === 0) {
+                const e = document.createElement('div');
+                e.className = 'modal-empty';
+                e.textContent = 'Your music library is empty. Add your first track below, or go to the Task Library.';
+                box.appendChild(e);
+            } else {
+                musicLibrary.forEach(function(track) {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'modal-item';
+                    btn.innerHTML = '🎵 ' + (track.name || 'Untitled') +
+                        (track.artist ? '<span class="modal-meta">' + track.artist + '</span>' : '<span class="modal-meta">No artist</span>');
+                    btn.addEventListener('click', function() {
+                        // Avoid duplicates in the same day
+                        if (dayMusic[dayIdx].some(function(e) { return e.musicId === track.id; })) {
+                            alert('This track is already on this day.');
+                            return;
+                        }
+                        dayMusic[dayIdx].push({ id: genId(), musicId: track.id });
+                        saveToStorage();
+                        document.body.removeChild(overlay);
+                        playAdd();
+                        renderPage();
+                    });
+                    box.appendChild(btn);
+                });
+            }
+
+            const createBtn = document.createElement('button');
+            createBtn.type = 'button';
+            createBtn.className = 'modal-item special';
+            createBtn.textContent = '✦ Add a new track to library';
+            createBtn.addEventListener('click', function() {
+                document.body.removeChild(overlay);
+                openCreateMusicInline(dayIdx);
+            });
+            box.appendChild(createBtn);
+
+            const cancelBtn = document.createElement('button');
+            cancelBtn.type = 'button';
+            cancelBtn.className = 'modal-cancel';
+            cancelBtn.textContent = 'Cancel';
+            cancelBtn.addEventListener('click', function() { playClose(); document.body.removeChild(overlay); });
+            box.appendChild(cancelBtn);
+
+            overlay.appendChild(box);
+            overlay.addEventListener('click', function(e) { if (e.target === overlay) { playClose(); document.body.removeChild(overlay); } });
+            document.body.appendChild(overlay);
+        }
+
+        function openCreateMusicInline(dayIdx) {
+            const name = prompt('Track name (e.g. "Morning Light"):');
+            if (!name || !name.trim()) return;
+            const artist = prompt('Artist (optional):', '') || '';
+            const url = prompt('Audio URL (MP3, M4A, OGG, etc.) — required to play:', '') || '';
+            const newTrack = {
+                id: genId(),
+                name: name.trim(),
+                artist: artist.trim(),
+                url: url.trim()
+            };
+            musicLibrary.push(newTrack);
+            if (dayIdx !== undefined) {
+                dayMusic[dayIdx].push({ id: genId(), musicId: newTrack.id });
+            }
+            saveToStorage();
+            playAdd();
+            renderPage();
+        }
+
+        // ================= DAY PAGE =================
+        function renderDayPage(dayIdx) {
+            const wrap = document.createElement('div');
+            const day = DAYS[dayIdx];
+
+            const title = document.createElement('div');
+            title.className = 'day-title';
+            title.textContent = day.emoji + ' ' + day.name;
+            wrap.appendChild(title);
+
+            const prog = document.createElement('div');
+            prog.className = 'day-progress';
+            prog.id = 'day-progress-' + dayIdx;
+            wrap.appendChild(prog);
+
+            const allTasks = [];
+            days[dayIdx].forEach(function(subj, subjIdx) {
+                const cat = getCategoryForDaySubject(subj);
+                const bank = subjectBank.find(function(s) { return s.id === subj.bankSubjectId; });
+                const subjectName = bank ? bank.name : 'Activity';
+                subj.tasks.forEach(function(task, taskIdx) {
+                    allTasks.push({ task: task, subjIdx: subjIdx, taskIdx: taskIdx, category: cat, subjectName: subjectName });
+                });
+            });
+
+            if (allTasks.length === 0) {
+                const empty = document.createElement('div');
+                empty.className = 'wheel-empty';
+                empty.textContent = 'No tasks on the wheel yet.';
+                wrap.appendChild(empty);
+            } else {
+                wrap.appendChild(renderWheel(dayIdx, allTasks));
+            }
+
+            const cats = {};
+            allTasks.forEach(function(t) { cats[t.category] = (cats[t.category] || 0) + 1; });
+            if (Object.keys(cats).length > 0) {
+                const legend = document.createElement('div');
+                legend.className = 'wheel-legend';
+                Object.keys(cats).forEach(function(cat) {
+                    const meta = CATEGORY_META[cat] || CATEGORY_META[''];
+                    const item = document.createElement('div');
+                    item.className = 'legend-item';
+                    item.innerHTML = '<span class="legend-dot" style="background:' + meta.color + ';"></span><span>' + meta.emoji + ' ' + meta.label + ' (' + cats[cat] + ')</span>';
+                    legend.appendChild(item);
+                });
+                wrap.appendChild(legend);
+            }
+
+            // Area strip
+            if (days[dayIdx].length > 0) {
+                const areaStrip = document.createElement('div');
+                areaStrip.className = 'area-strip';
+                days[dayIdx].forEach(function(subj, subjIdx) {
+                    const bank = subjectBank.find(function(s) { return s.id === subj.bankSubjectId; });
+                    const meta = CATEGORY_META[getCategoryForDaySubject(subj)] || CATEGORY_META[''];
+                    const chip = document.createElement('div');
+                    chip.className = 'area-chip';
+                    chip.innerHTML =
+                        '<span class="chip-dot" style="background:' + meta.color + ';"></span>' +
+                        '<span class="chip-name">' + meta.emoji + ' ' + (bank ? bank.name : 'Activity') + '</span>' +
+                        '<span class="chip-count">' + subj.tasks.length + ' tasks</span>';
+                    const addBtn = document.createElement('button');
+                    addBtn.type = 'button';
+                    addBtn.className = 'chip-add';
+                    addBtn.textContent = '＋';
+                    addBtn.title = 'Add task to this area';
+                    addBtn.addEventListener('click', function() {
+                        playAdd();
+                        openTaskPicker(dayIdx, subjIdx, bank);
+                    });
+                    chip.appendChild(addBtn);
+                    const rmBtn = document.createElement('button');
+                    rmBtn.type = 'button';
+                    rmBtn.className = 'chip-remove';
+                    rmBtn.textContent = '✕';
+                    rmBtn.title = 'Remove this area from the day';
+                    rmBtn.addEventListener('click', function() {
+                        if (confirm('Remove "' + (bank ? bank.name : 'this area') + '" and all its tasks from ' + DAYS[dayIdx].name + '?')) {
+                            playRemove();
+                            days[dayIdx].splice(subjIdx, 1);
+                            saveToStorage();
+                            renderPage();
+                        }
+                    });
+                    chip.appendChild(rmBtn);
+                    areaStrip.appendChild(chip);
+                });
+                wrap.appendChild(areaStrip);
+            }
+
+            // Actions
+            const actions = document.createElement('div');
+            actions.className = 'wheel-actions';
+            const addTaskBtn = document.createElement('button');
+            addTaskBtn.type = 'button';
+            addTaskBtn.className = 'btn-add-wheel add-task-btn';
+            addTaskBtn.textContent = '＋ Add task';
+            addTaskBtn.addEventListener('click', function() { playAdd(); openAddTaskFlow(dayIdx); });
+            actions.appendChild(addTaskBtn);
+
+            const addAreaBtn = document.createElement('button');
+            addAreaBtn.type = 'button';
+            addAreaBtn.className = 'btn-add-wheel';
+            addAreaBtn.textContent = '＋ Add area';
+            addAreaBtn.addEventListener('click', function() { playAdd(); openSubjectPicker(dayIdx); });
+            actions.appendChild(addAreaBtn);
+            wrap.appendChild(actions);
+
+            // Music section
+            wrap.appendChild(renderMusicSection(dayIdx));
+
+            setTimeout(function() { updateDayProgress(dayIdx); }, 0);
+            return wrap;
+        }
+
+        function renderWheel(dayIdx, allTasks) {
+            const wrap = document.createElement('div');
+            wrap.className = 'wheel-wrap';
+            const stage = document.createElement('div');
+            stage.className = 'wheel-stage';
+            const ring = document.createElement('div');
+            ring.className = 'wheel-ring';
+            stage.appendChild(ring);
+            const center = document.createElement('div');
+            center.className = 'wheel-center';
+            const day = DAYS[dayIdx];
+            const doneCount = allTasks.filter(function(t) { return t.task.done; }).length;
+            center.innerHTML =
+                '<div class="center-emoji">' + day.emoji + '</div>' +
+                '<div class="center-label">' + day.name + '</div>' +
+                '<div class="center-sub">' + doneCount + ' / ' + allTasks.length + ' done</div>';
+            stage.appendChild(center);
+
+            const n = allTasks.length;
+            const radiusPct = n <= 4 ? 33 : (n <= 8 ? 37 : 41);
+            const startAngle = -Math.PI / 2;
+            const small = n > 9;
+
+            allTasks.forEach(function(entry, i) {
+                const angle = startAngle + (i * (2 * Math.PI / n));
+                const x = 50 + radiusPct * Math.cos(angle);
+                const y = 50 + radiusPct * Math.sin(angle);
+                const meta = CATEGORY_META[entry.category] || CATEGORY_META[''];
+                const bubble = document.createElement('div');
+                bubble.className = 'wheel-task ' + (entry.category || '');
+                bubble.style.left = x + '%';
+                bubble.style.top = y + '%';
+                bubble.style.transform = 'translate(-50%, -50%)';
+                if (small) { bubble.style.width = '124px'; bubble.style.height = '124px'; }
+
+                const emojiEl = document.createElement('div');
+                emojiEl.className = 'wheel-task-emoji';
+                emojiEl.textContent = meta.emoji;
+                bubble.appendChild(emojiEl);
+
+                const textEl = document.createElement('div');
+                textEl.className = 'wheel-task-text';
+                textEl.textContent = entry.task.text || 'Untitled';
+                bubble.appendChild(textEl);
+
+                if (entry.task.from || entry.task.to) {
+                    const timeEl = document.createElement('div');
+                    timeEl.className = 'wheel-task-time';
+                    const f = entry.task.from ? format12h(entry.task.from) : '';
+                    const t = entry.task.to ? format12h(entry.task.to) : '';
+                    timeEl.textContent = f && t ? (f + ' – ' + t) : (f || t);
+                    bubble.appendChild(timeEl);
+                }
+                if (entry.task.done) {
+                    bubble.classList.add('done');
+                    const check = document.createElement('div');
+                    check.className = 'wheel-task-check';
+                    check.textContent = '✓';
+                    bubble.appendChild(check);
+                }
+                const dot = document.createElement('div');
+                dot.className = 'wheel-task-color-dot';
+                dot.style.background = meta.color;
+                bubble.appendChild(dot);
+
+                bubble.addEventListener('mouseenter', function() { bubble.style.transform = 'translate(-50%, -50%) scale(1.07)'; });
+                bubble.addEventListener('mouseleave', function() { bubble.style.transform = 'translate(-50%, -50%) scale(1)'; });
+                bubble.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    playOpen();
+                    openTaskDetail(dayIdx, entry.subjIdx, entry.taskIdx);
+                });
+                stage.appendChild(bubble);
+            });
+            wrap.appendChild(stage);
+            return wrap;
+        }
+
+        // ADD TASK FLOW
+        function openAddTaskFlow(dayIdx) {
+            const overlay = document.createElement('div');
+            overlay.className = 'modal-overlay';
+            const box = document.createElement('div');
+            box.className = 'modal-box';
+            const h = document.createElement('div');
+            h.className = 'modal-title';
+            h.textContent = 'Add a task to ' + DAYS[dayIdx].name;
+            box.appendChild(h);
+            const sub = document.createElement('div');
+            sub.className = 'modal-subtitle';
+            sub.textContent = 'Choose an area first, then pick a task.';
+            box.appendChild(sub);
+
+            if (days[dayIdx].length === 0) {
+                const e = document.createElement('div');
+                e.className = 'modal-empty';
+                e.textContent = 'No areas on this day yet. Add an area below first.';
+                box.appendChild(e);
+                const createBtn = document.createElement('button');
+                createBtn.type = 'button';
+                createBtn.className = 'modal-item special';
+                createBtn.textContent = '✦ Add an area to this day';
+                createBtn.addEventListener('click', function() {
+                    document.body.removeChild(overlay);
+                    openSubjectPicker(dayIdx);
+                });
+                box.appendChild(createBtn);
+                const cancelBtn = document.createElement('button');
+                cancelBtn.type = 'button';
+                cancelBtn.className = 'modal-cancel';
+                cancelBtn.textContent = 'Cancel';
+                cancelBtn.addEventListener('click', function() { playClose(); document.body.removeChild(overlay); });
+                box.appendChild(cancelBtn);
+                overlay.appendChild(box);
+                overlay.addEventListener('click', function(e) { if (e.target === overlay) { playClose(); document.body.removeChild(overlay); } });
+                document.body.appendChild(overlay);
+                return;
+            }
+
+            days[dayIdx].forEach(function(subj, subjIdx) {
+                const bank = subjectBank.find(function(s) { return s.id === subj.bankSubjectId; });
+                const meta = CATEGORY_META[getCategoryForDaySubject(subj)] || CATEGORY_META[''];
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'modal-item';
+                btn.innerHTML = meta.emoji + ' ' + (bank ? bank.name : 'Activity') +
+                    '<span class="modal-meta">' + subj.tasks.length + ' tasks · ' + meta.label + '</span>';
+                btn.addEventListener('click', function() {
+                    document.body.removeChild(overlay);
+                    openTaskPicker(dayIdx, subjIdx, bank);
+                });
+                box.appendChild(btn);
+            });
+
+            const createAreaBtn = document.createElement('button');
+            createAreaBtn.type = 'button';
+            createAreaBtn.className = 'modal-item special';
+            createAreaBtn.textContent = '＋ Add a new area instead';
+            createAreaBtn.addEventListener('click', function() {
+                document.body.removeChild(overlay);
+                openSubjectPicker(dayIdx);
+            });
+            box.appendChild(createAreaBtn);
+
+            const cancelBtn = document.createElement('button');
+            cancelBtn.type = 'button';
+            cancelBtn.className = 'modal-cancel';
+            cancelBtn.textContent = 'Cancel';
+            cancelBtn.addEventListener('click', function() { playClose(); document.body.removeChild(overlay); });
+            box.appendChild(cancelBtn);
+
+            overlay.appendChild(box);
+            overlay.addEventListener('click', function(e) { if (e.target === overlay) { playClose(); document.body.removeChild(overlay); } });
+            document.body.appendChild(overlay);
+        }
+
+        function openTaskPicker(dayIdx, subjIdx, bankSubj) {
+            const overlay = document.createElement('div');
+            overlay.className = 'modal-overlay';
+            const box = document.createElement('div');
+            box.className = 'modal-box';
+            const h = document.createElement('div');
+            h.className = 'modal-title';
+            h.textContent = 'Add task to ' + (bankSubj ? bankSubj.name : 'area');
+            box.appendChild(h);
+
+            const tasks = bankSubj ? bankSubj.tasks : [];
+            if (tasks.length === 0) {
+                const e = document.createElement('div');
+                e.className = 'modal-empty';
+                e.textContent = 'This area has no tasks in the library yet. Create a task below — it will be saved to the library and added to this day.';
+                box.appendChild(e);
+            } else {
+                tasks.forEach(function(task) {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'modal-item';
+                    const timeStr = (task.from || task.to) ?
+                        (task.from ? format12h(task.from) : '?') + ' – ' + (task.to ? format12h(task.to) : '?') : 'No time set';
+                    btn.innerHTML = task.text + '<span class="modal-meta">' + timeStr + '</span>';
+                    btn.addEventListener('click', function() {
+                        const copiedLinks = (task.links || []).map(function(l) { return { id: genId(), url: l.url || '' }; });
+                        const copiedNotes = (task.notes || []).map(function(n) { return { id: genId(), text: n.text || '' }; });
+                        days[dayIdx][subjIdx].tasks.push({
+                            id: genId(),
+                            text: task.text,
+                            done: false,
+                            from: task.from || '',
+                            to: task.to || '',
+                            links: copiedLinks,
+                            notes: copiedNotes
+                        });
+                        saveToStorage();
+                        document.body.removeChild(overlay);
+                        playAdd();
+                        renderPage();
+                    });
+                    box.appendChild(btn);
+                });
+            }
+
+            const createTaskBtn = document.createElement('button');
+            createTaskBtn.type = 'button';
+            createTaskBtn.className = 'modal-item special';
+            createTaskBtn.textContent = '✦ Create a new task (adds it to library + this day)';
+            createTaskBtn.addEventListener('click', function() {
+                document.body.removeChild(overlay);
+                openCreateTaskInline(dayIdx, subjIdx, bankSubj);
+            });
+            box.appendChild(createTaskBtn);
+
+            const cancelBtn = document.createElement('button');
+            cancelBtn.type = 'button';
+            cancelBtn.className = 'modal-cancel';
+            cancelBtn.textContent = 'Cancel';
+            cancelBtn.addEventListener('click', function() { playClose(); document.body.removeChild(overlay); });
+            box.appendChild(cancelBtn);
+
+            overlay.appendChild(box);
+            overlay.addEventListener('click', function(e) { if (e.target === overlay) { playClose(); document.body.removeChild(overlay); } });
+            document.body.appendChild(overlay);
+        }
+
+        function openCreateTaskInline(dayIdx, subjIdx, bankSubj) {
+            const taskName = prompt('Task name (e.g. "20-min walk", "Skincare routine"):');
+            if (!taskName || !taskName.trim()) return;
+            const from = prompt('Start time (HH:MM, 24h) — leave blank to skip:', '') || '';
+            const to = prompt('End time (HH:MM, 24h) — leave blank to skip:', '') || '';
+            function validTime(t) { return !t || /^\d{1,2}:\d{2}$/.test(t); }
+            const finalFrom = validTime(from) ? from : '';
+            const finalTo = validTime(to) ? to : '';
+            if (bankSubj) {
+                bankSubj.tasks.push({ id: genId(), text: taskName.trim(), from: finalFrom, to: finalTo, links: [], notes: [] });
+            }
+            days[dayIdx][subjIdx].tasks.push({ id: genId(), text: taskName.trim(), done: false, from: finalFrom, to: finalTo, links: [], notes: [] });
+            saveToStorage();
+            playAdd();
+            renderPage();
+        }
+
+        // TASK DETAIL PANEL
+        function openTaskDetail(dayIdx, subjIdx, taskIdx) {
+            const daySubject = days[dayIdx][subjIdx];
+            if (!daySubject) return;
+            const task = daySubject.tasks[taskIdx];
+            if (!task) return;
+            if (!Array.isArray(task.links)) task.links = [];
+            if (!Array.isArray(task.notes)) task.notes = [];
+
+            const cat = getCategoryForDaySubject(daySubject);
+            const meta = CATEGORY_META[cat] || CATEGORY_META[''];
+            const bank = subjectBank.find(function(s) { return s.id === daySubject.bankSubjectId; });
+            const subjectName = bank ? bank.name : 'Activity';
+
+            const overlay = document.createElement('div');
+            overlay.className = 'detail-overlay';
+            const box = document.createElement('div');
+            box.className = 'detail-box';
+
+            const header = document.createElement('div');
+            header.className = 'detail-header';
+            const colorBar = document.createElement('div');
+            colorBar.className = 'detail-color-bar';
+            colorBar.style.background = meta.color;
+            header.appendChild(colorBar);
+            const titleWrap = document.createElement('div');
+            titleWrap.style.flex = '1';
+            const titleEl = document.createElement('div');
+            titleEl.className = 'detail-title';
+            titleEl.textContent = task.text || 'Untitled task';
+            titleWrap.appendChild(titleEl);
+            const subjEl = document.createElement('div');
+            subjEl.className = 'detail-subject';
+            subjEl.textContent = meta.emoji + ' ' + subjectName + ' · ' + DAYS[dayIdx].name;
+            titleWrap.appendChild(subjEl);
+            header.appendChild(titleWrap);
+            const closeBtn = document.createElement('button');
+            closeBtn.type = 'button';
+            closeBtn.className = 'detail-close';
+            closeBtn.textContent = '✕';
+            closeBtn.addEventListener('click', function() { playClose(); document.body.removeChild(overlay); });
+            header.appendChild(closeBtn);
+            box.appendChild(header);
+
+            // Schedule
+            const timeSection = document.createElement('div');
+            timeSection.className = 'detail-section';
+            const timeTitle = document.createElement('div');
+            timeTitle.className = 'detail-section-title';
+            timeTitle.textContent = '🕰 Schedule';
+            timeSection.appendChild(timeTitle);
+            const timeRow = document.createElement('div');
+            timeRow.className = 'detail-time-row';
+            const fromBlock = document.createElement('div');
+            fromBlock.className = 'detail-time-block';
+            fromBlock.innerHTML = '<div class="tl">From</div><div class="tv' + (task.from ? '' : ' empty') + '">' + (task.from ? format12h(task.from) : '—') + '</div>';
+            timeRow.appendChild(fromBlock);
+            const arrow = document.createElement('div');
+            arrow.className = 'detail-time-arrow';
+            arrow.textContent = '→';
+            timeRow.appendChild(arrow);
+            const toBlock = document.createElement('div');
+            toBlock.className = 'detail-time-block';
+            toBlock.innerHTML = '<div class="tl">To</div><div class="tv' + (task.to ? '' : ' empty') + '">' + (task.to ? format12h(task.to) : '—') + '</div>';
+            timeRow.appendChild(toBlock);
+            const dur = durationLabel(task.from, task.to);
+            if (dur) {
+                const durEl = document.createElement('div');
+                durEl.className = 'detail-duration';
+                durEl.textContent = '⏱ ' + dur;
+                timeRow.appendChild(durEl);
+            }
+            timeSection.appendChild(timeRow);
+
+            const editRow = document.createElement('div');
+            editRow.className = 'detail-time-edit-row';
+            const fLbl = document.createElement('span');
+            fLbl.className = 'time-label';
+            fLbl.textContent = 'From:';
+            editRow.appendChild(fLbl);
+            const fIn = document.createElement('input');
+            fIn.type = 'time';
+            fIn.className = 'time-input';
+            fIn.value = task.from || '';
+            fIn.addEventListener('change', function(e) {
+                task.from = e.target.value;
+                saveToStorage();
+                document.body.removeChild(overlay);
+                renderPage();
+                setTimeout(function() { openTaskDetail(dayIdx, subjIdx, taskIdx); }, 50);
+            });
+            editRow.appendChild(fIn);
+            const sep = document.createElement('span');
+            sep.className = 'time-sep';
+            sep.textContent = '→';
+            editRow.appendChild(sep);
+            const tLbl = document.createElement('span');
+            tLbl.className = 'time-label';
+            tLbl.textContent = 'To:';
+            editRow.appendChild(tLbl);
+            const tIn = document.createElement('input');
+            tIn.type = 'time';
+            tIn.className = 'time-input';
+            tIn.value = task.to || '';
+            tIn.addEventListener('change', function(e) {
+                task.to = e.target.value;
+                saveToStorage();
+                document.body.removeChild(overlay);
+                renderPage();
+                setTimeout(function() { openTaskDetail(dayIdx, subjIdx, taskIdx); }, 50);
+            });
+            editRow.appendChild(tIn);
+            timeSection.appendChild(editRow);
+            box.appendChild(timeSection);
+
+            // Status
+            const doneSection = document.createElement('div');
+            doneSection.className = 'detail-section';
+            const doneTitle = document.createElement('div');
+            doneTitle.className = 'detail-section-title';
+            doneTitle.textContent = '✓ Status';
+            doneSection.appendChild(doneTitle);
+            const toggleRow = document.createElement('div');
+            toggleRow.className = 'detail-toggle-row';
+            const toggleBtn = document.createElement('button');
+            toggleBtn.type = 'button';
+            toggleBtn.className = 'detail-toggle-btn' + (task.done ? ' done' : '');
+            toggleBtn.innerHTML = task.done ? '✓ Completed' : '○ Mark as done';
+            toggleBtn.addEventListener('click', function() {
+                task.done = !task.done;
+                saveToStorage();
+                if (task.done) { playTaskComplete(); celebrate(); } else { playTaskUncheck(); }
+                document.body.removeChild(overlay);
+                renderPage();
+            });
+            toggleRow.appendChild(toggleBtn);
+            const hint = document.createElement('div');
+            hint.className = 'detail-toggle-hint';
+            hint.textContent = task.done ? 'Nice work — this one is done.' : 'Tap to mark this task complete.';
+            toggleRow.appendChild(hint);
+            doneSection.appendChild(toggleRow);
+            box.appendChild(doneSection);
+
+            // Links
+            const linksSection = document.createElement('div');
+            linksSection.className = 'detail-section';
+            const linksTitle = document.createElement('div');
+            linksTitle.className = 'detail-section-title';
+            linksTitle.textContent = '🔗 Links';
+            linksSection.appendChild(linksTitle);
+            task.links.forEach(function(link, li) {
+                const row = document.createElement('div');
+                row.className = 'detail-link-item';
+                const icon = document.createElement('span');
+                icon.className = 'detail-link-icon';
+                icon.textContent = '🔗';
+                row.appendChild(icon);
+                const input = document.createElement('input');
+                input.className = 'detail-link-input';
+                input.type = 'text';
+                input.placeholder = 'Paste URL';
+                input.value = link.url || '';
+                input.addEventListener('input', function(e) { link.url = e.target.value; saveToStorage(); });
+                row.appendChild(input);
+                const openBtn = document.createElement('a');
+                openBtn.className = 'detail-link-open';
+                openBtn.textContent = 'Open';
+                openBtn.href = 'javascript:void(0)';
+                openBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    playClick();
+                    let url = (link.url || '').trim();
+                    if (!url) { alert('Paste a URL first'); return; }
+                    if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+                    window.open(url, '_blank', 'noopener,noreferrer');
+                });
+                row.appendChild(openBtn);
+                const rm = document.createElement('button');
+                rm.type = 'button';
+                rm.className = 'detail-remove-mini';
+                rm.textContent = '✕';
+                rm.addEventListener('click', function() {
+                    playRemove();
+                    task.links.splice(li, 1);
+                    saveToStorage();
+                    document.body.removeChild(overlay);
+                    setTimeout(function() { openTaskDetail(dayIdx, subjIdx, taskIdx); }, 30);
+                });
+                row.appendChild(rm);
+                linksSection.appendChild(row);
+            });
+            const addLinkBtn = document.createElement('button');
+            addLinkBtn.type = 'button';
+            addLinkBtn.className = 'detail-add-btn';
+            addLinkBtn.textContent = '🔗 + Add link';
+            addLinkBtn.addEventListener('click', function() {
+                playAdd();
+                task.links.push({ id: genId(), url: '' });
+                saveToStorage();
+                document.body.removeChild(overlay);
+                setTimeout(function() { openTaskDetail(dayIdx, subjIdx, taskIdx); }, 30);
+            });
+            linksSection.appendChild(addLinkBtn);
+            box.appendChild(linksSection);
+
+            // Notes
+            const notesSection = document.createElement('div');
+            notesSection.className = 'detail-section';
+            const notesTitle = document.createElement('div');
+            notesTitle.className = 'detail-section-title';
+            notesTitle.textContent = '📝 Notes';
+            notesSection.appendChild(notesTitle);
+            task.notes.forEach(function(note, ni) {
+                const row = document.createElement('div');
+                row.className = 'detail-note-item';
+                const icon = document.createElement('span');
+                icon.className = 'detail-link-icon';
+                icon.textContent = '📝';
+                row.appendChild(icon);
+                const ta = document.createElement('textarea');
+                ta.className = 'detail-note-textarea';
+                ta.placeholder = 'Write a note…';
+                ta.value = note.text || '';
+                ta.rows = 2;
+                ta.addEventListener('input', function(e) { note.text = e.target.value; saveToStorage(); });
+                row.appendChild(ta);
+                const rm = document.createElement('button');
+                rm.type = 'button';
+                rm.className = 'detail-remove-mini';
+                rm.textContent = '✕';
+                rm.addEventListener('click', function() {
+                    playRemove();
+                    task.notes.splice(ni, 1);
+                    saveToStorage();
+                    document.body.removeChild(overlay);
+                    setTimeout(function() { openTaskDetail(dayIdx, subjIdx, taskIdx); }, 30);
+                });
+                row.appendChild(rm);
+                notesSection.appendChild(row);
+            });
+            const addNoteBtn = document.createElement('button');
+            addNoteBtn.type = 'button';
+            addNoteBtn.className = 'detail-add-btn';
+            addNoteBtn.textContent = '📝 + Add note';
+            addNoteBtn.addEventListener('click', function() {
+                playAdd();
+                task.notes.push({ id: genId(), text: '' });
+                saveToStorage();
+                document.body.removeChild(overlay);
+                setTimeout(function() { openTaskDetail(dayIdx, subjIdx, taskIdx); }, 30);
+            });
+            notesSection.appendChild(addNoteBtn);
+            box.appendChild(notesSection);
+
+            // Delete
+            const delRow = document.createElement('div');
+            delRow.className = 'detail-delete-row';
+            const delBtn = document.createElement('button');
+            delBtn.type = 'button';
+            delBtn.className = 'detail-delete-btn';
+            delBtn.textContent = '🗑 Remove this task';
+            delBtn.addEventListener('click', function() {
+                if (confirm('Remove this task from ' + DAYS[dayIdx].name + '?')) {
+                    playRemove();
+                    days[dayIdx][subjIdx].tasks.splice(taskIdx, 1);
+                    saveToStorage();
+                    document.body.removeChild(overlay);
+                    renderPage();
+                }
+            });
+            delRow.appendChild(delBtn);
+            box.appendChild(delRow);
+
+            overlay.appendChild(box);
+            overlay.addEventListener('click', function(e) { if (e.target === overlay) { playClose(); document.body.removeChild(overlay); } });
+            document.body.appendChild(overlay);
+        }
+
+        function updateDayProgress(dayIdx) {
+            const prog = document.getElementById('day-progress-' + dayIdx);
+            if (!prog) return;
+            let total = 0, done = 0;
+            days[dayIdx].forEach(function(subj) {
+                subj.tasks.forEach(function(t) { total++; if (t.done) done++; });
+            });
+            if (total === 0) { prog.textContent = 'No tasks yet'; prog.classList.remove('complete'); return; }
+            if (done === total) {
+                prog.classList.add('complete');
+                prog.textContent = done + ' of ' + total + ' — complete';
+                if (!badges[dayIdx]) {
+                    badges[dayIdx] = true;
+                    saveToStorage();
+                    celebrateFullDay(dayIdx);
+                }
+            } else {
+                prog.classList.remove('complete');
+                prog.textContent = done + ' of ' + total + ' tasks complete';
+            }
+        }
+
+        // SUBJECT PICKER
+        function openSubjectPicker(dayIdx) {
+            const overlay = document.createElement('div');
+            overlay.className = 'modal-overlay';
+            const box = document.createElement('div');
+            box.className = 'modal-box';
+            const h = document.createElement('div');
+            h.className = 'modal-title';
+            h.textContent = 'Add an area to ' + DAYS[dayIdx].name;
+            box.appendChild(h);
+
+            if (subjectBank.length === 0) {
+                const e = document.createElement('div');
+                e.className = 'modal-empty';
+                e.textContent = 'Your library is empty. Create your first area below.';
+                box.appendChild(e);
+            } else {
+                subjectBank.forEach(function(bs) {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'modal-item';
+                    btn.innerHTML = bs.name + '<span class="modal-meta">' + (bs.tasks.length ? bs.tasks.length + ' tasks in library' : 'no tasks yet') + '</span>';
+                    btn.addEventListener('click', function() {
+                        playAdd();
+                        addDaySubject(dayIdx, bs.id);
+                        document.body.removeChild(overlay);
+                    });
+                    box.appendChild(btn);
+                });
+            }
+
+            const createBtn = document.createElement('button');
+            createBtn.type = 'button';
+            createBtn.className = 'modal-item special';
+            createBtn.textContent = '✦ Create a new area';
+            createBtn.addEventListener('click', function() {
+                const name = prompt('Area name (e.g. Morning Ritual, Emma, Movement, Nutrition):');
+                if (!name || !name.trim()) return;
+                const bs = { id: genId(), name: name.trim(), tasks: [] };
+                const n = name.toLowerCase();
+                if (n.includes('emma')) bs.category = 'kid1';
+                else if (n.includes('leo')) bs.category = 'kid2';
+                else if (n.includes('mia')) bs.category = 'kid3';
+                else if (n.includes('mom') || n.includes('me') || n.includes('self') || n.includes('wellness')) bs.category = 'mom';
+                subjectBank.push(bs);
+                addDaySubject(dayIdx, bs.id);
+                saveToStorage();
+                document.body.removeChild(overlay);
+                playAdd();
+            });
+            box.appendChild(createBtn);
+
+            const cancelBtn = document.createElement('button');
+            cancelBtn.type = 'button';
+            cancelBtn.className = 'modal-cancel';
+            cancelBtn.textContent = 'Cancel';
+            cancelBtn.addEventListener('click', function() { playClose(); document.body.removeChild(overlay); });
+            box.appendChild(cancelBtn);
+
+            overlay.appendChild(box);
+            overlay.addEventListener('click', function(e) { if (e.target === overlay) { playClose(); document.body.removeChild(overlay); } });
+            document.body.appendChild(overlay);
+        }
+
+        function addDaySubject(dayIdx, bankSubjectId) {
+            days[dayIdx].push({ id: genId(), bankSubjectId: bankSubjectId, tasks: [] });
+            saveToStorage();
+            renderPage();
+        }
+
+        // BANK PAGE
+        function renderBankPage() {
+            const wrap = document.createElement('div');
+            const title = document.createElement('div');
+            title.className = 'bank-title';
+            title.textContent = '📋 Task Library';
+            wrap.appendChild(title);
+            const sub = document.createElement('div');
+            sub.className = 'bank-sub';
+            sub.textContent = 'Your reusable tasks and music — for the family and for yourself';
+            wrap.appendChild(sub);
+
+            // ---------- MUSIC LIBRARY CARD (first) ----------
+            wrap.appendChild(renderBankMusicCard());
+
+            // ---------- TASK AREAS ----------
+            const addBankSubjBtn = document.createElement('button');
+            addBankSubjBtn.type = 'button';
+            addBankSubjBtn.className = 'btn-add-bank-subject';
+            addBankSubjBtn.textContent = '＋ Add new area';
+            addBankSubjBtn.addEventListener('click', function() {
+                const name = prompt('Area name (e.g. Morning Ritual, Emma, Movement, Nutrition):');
+                if (!name || !name.trim()) return;
+                const bs = { id: genId(), name: name.trim(), tasks: [] };
+                const n = name.toLowerCase();
+                if (n.includes('emma')) bs.category = 'kid1';
+                else if (n.includes('leo')) bs.category = 'kid2';
+                else if (n.includes('mia')) bs.category = 'kid3';
+                else if (n.includes('mom') || n.includes('me') || n.includes('self') || n.includes('wellness')) bs.category = 'mom';
+                subjectBank.push(bs);
+                saveToStorage();
+                playAdd();
+                renderPage();
+            });
+            wrap.appendChild(addBankSubjBtn);
+
+            if (subjectBank.length === 0) {
+                const hint = document.createElement('div');
+                hint.className = 'wheel-empty';
+                hint.textContent = 'No areas yet. Add your first one above.';
+                wrap.appendChild(hint);
+            } else {
+                subjectBank.forEach(function(bs, bsIdx) { wrap.appendChild(renderBankSubjectCard(bs, bsIdx)); });
+            }
+            return wrap;
+        }
+
+        function renderBankMusicCard() {
+            const card = document.createElement('div');
+            card.className = 'bank-music-card';
+
+            const title = document.createElement('div');
+            title.className = 'bank-music-title';
+            title.innerHTML = '🎵 Music Library <span style="font-size:0.7rem;color:var(--muted);font-weight:500;">(' + musicLibrary.length + ' tracks)</span>';
+            card.appendChild(title);
+
+            if (musicLibrary.length === 0) {
+                const hint = document.createElement('div');
+                hint.className = 'wheel-empty';
+                hint.style.padding = '14px';
+                hint.textContent = 'No tracks yet — add one below.';
+                card.appendChild(hint);
+            } else {
+                musicLibrary.forEach(function(track, idx) {
+                    const row = document.createElement('div');
+                    row.className = 'bank-music-row';
+
+                    const nameIn = document.createElement('input');
+                    nameIn.className = 'bank-music-input name';
+                    nameIn.type = 'text';
+                    nameIn.placeholder = 'Track name';
+                    nameIn.value = track.name || '';
+                    nameIn.addEventListener('input', function(e) { track.name = e.target.value; saveToStorage(); });
+                    row.appendChild(nameIn);
+
+                    const artistIn = document.createElement('input');
+                    artistIn.className = 'bank-music-input artist';
+                    artistIn.type = 'text';
+                    artistIn.placeholder = 'Artist';
+                    artistIn.value = track.artist || '';
+                    artistIn.addEventListener('input', function(e) { track.artist = e.target.value; saveToStorage(); });
+                    row.appendChild(artistIn);
+
+                    const urlIn = document.createElement('input');
+                    urlIn.className = 'bank-music-input url';
+                    urlIn.type = 'text';
+                    urlIn.placeholder = 'Audio URL (MP3 / M4A / OGG)';
+                    urlIn.value = track.url || '';
+                    urlIn.addEventListener('input', function(e) { track.url = e.target.value; saveToStorage(); });
+                    row.appendChild(urlIn);
+
+                    const openBtn = document.createElement('a');
+                    openBtn.className = 'music-open-link';
+                    openBtn.textContent = 'Test';
+                    openBtn.href = 'javascript:void(0)';
+                    openBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        if (!track.url) { alert('Add a URL first'); return; }
+                        new Audio(track.url).play().catch(function(err) {
+                            alert('Could not play. Check URL.\n' + (err && err.message ? err.message : ''));
+                        });
+                    });
+                    row.appendChild(openBtn);
+
+                    const rmBtn = document.createElement('button');
+                    rmBtn.type = 'button';
+                    rmBtn.className = 'task-remove';
+                    rmBtn.textContent = '✕';
+                    rmBtn.title = 'Delete this track from library';
+                    rmBtn.addEventListener('click', function() {
+                        if (confirm('Delete "' + (track.name || 'Untitled') + '" from the library? It will also be removed from any day.')) {
+                            playRemove();
+                            // Remove from all days
+                            for (let d = 0; d < 7; d++) {
+                                dayMusic[d] = dayMusic[d].filter(function(e) { return e.musicId !== track.id; });
+                            }
+                            // Stop if playing
+                            if (currentTrackId === track.id) { stopCurrentAudio(); }
+                            musicLibrary.splice(idx, 1);
+                            saveToStorage();
+                            renderPage();
+                        }
+                    });
+                    row.appendChild(rmBtn);
+
+                    card.appendChild(row);
+                });
+            }
+
+            // Add new track inline
+            const addRow = document.createElement('div');
+            addRow.className = 'bank-music-add-row';
+            const newName = document.createElement('input');
+            newName.type = 'text';
+            newName.placeholder = 'Track name';
+            addRow.appendChild(newName);
+            const newArtist = document.createElement('input');
+            newArtist.type = 'text';
+            newArtist.placeholder = 'Artist';
+            addRow.appendChild(newArtist);
+            const newUrl = document.createElement('input');
+            newUrl.type = 'text';
+            newUrl.placeholder = 'Audio URL';
+            addRow.appendChild(newUrl);
+            const addBtn = document.createElement('button');
+            addBtn.type = 'button';
+            addBtn.textContent = 'Add';
+            addBtn.addEventListener('click', function() {
+                if (!newName.value.trim()) { alert('Please enter a track name'); return; }
+                musicLibrary.push({
+                    id: genId(),
+                    name: newName.value.trim(),
+                    artist: newArtist.value.trim(),
+                    url: newUrl.value.trim()
+                });
+                saveToStorage();
+                playAdd();
+                renderPage();
+            });
+            addRow.appendChild(addBtn);
+            card.appendChild(addRow);
+
+            return card;
+        }
+
+        function renderBankSubjectCard(bs, bsIdx) {
+            const card = document.createElement('div');
+            card.className = 'bank-subject-card';
+            const header = document.createElement('div');
+            header.className = 'bank-subject-header';
+            const nameInput = document.createElement('input');
+            nameInput.className = 'bank-subject-name-input';
+            nameInput.type = 'text';
+            nameInput.value = bs.name;
+            nameInput.addEventListener('input', function(e) { bs.name = e.target.value; saveToStorage(); });
+            header.appendChild(nameInput);
+            const removeSubjBtn = document.createElement('button');
+            removeSubjBtn.type = 'button';
+            removeSubjBtn.className = 'btn-icon';
+            removeSubjBtn.textContent = '✕';
+            removeSubjBtn.addEventListener('click', function() {
+                if (confirm('Delete "' + bs.name + '" and all its tasks?')) {
+                    playRemove();
+                    subjectBank.splice(bsIdx, 1);
+                    saveToStorage();
+                    renderPage();
+                }
+            });
+            header.appendChild(removeSubjBtn);
+            card.appendChild(header);
+
+            if (bs.tasks.length === 0) {
+                const hint = document.createElement('div');
+                hint.className = 'wheel-empty';
+                hint.style.padding = '14px';
+                hint.textContent = 'No tasks here yet — add one below.';
+                card.appendChild(hint);
+            } else {
+                bs.tasks.forEach(function(task, taskIdx) {
+                    if (!Array.isArray(task.links)) task.links = [];
+                    if (!Array.isArray(task.notes)) task.notes = [];
+                    if (!task.from) task.from = '';
+                    if (!task.to) task.to = '';
+                    const item = document.createElement('div');
+                    item.className = 'bank-item';
+                    const mainRow = document.createElement('div');
+                    mainRow.className = 'bank-main-row';
+                    const text = document.createElement('input');
+                    text.className = 'bank-task-input';
+                    text.type = 'text';
+                    text.value = task.text;
+                    text.addEventListener('input', function(e) { task.text = e.target.value; saveToStorage(); });
+                    mainRow.appendChild(text);
+                    const fLbl = document.createElement('span');
+                    fLbl.className = 'time-label';
+                    fLbl.textContent = 'From:';
+                    mainRow.appendChild(fLbl);
+                    const fIn = document.createElement('input');
+                    fIn.type = 'time';
+                    fIn.className = 'time-input';
+                    fIn.value = task.from || '';
+                    fIn.addEventListener('change', function(e) { task.from = e.target.value; saveToStorage(); });
+                    mainRow.appendChild(fIn);
+                    const sep = document.createElement('span');
+                    sep.className = 'time-sep';
+                    sep.textContent = '→';
+                    mainRow.appendChild(sep);
+                    const tLbl = document.createElement('span');
+                    tLbl.className = 'time-label';
+                    tLbl.textContent = 'To:';
+                    mainRow.appendChild(tLbl);
+                    const tIn = document.createElement('input');
+                    tIn.type = 'time';
+                    tIn.className = 'time-input';
+                    tIn.value = task.to || '';
+                    tIn.addEventListener('change', function(e) { task.to = e.target.value; saveToStorage(); });
+                    mainRow.appendChild(tIn);
+                    const removeBtn = document.createElement('button');
+                    removeBtn.type = 'button';
+                    removeBtn.className = 'task-remove';
+                    removeBtn.textContent = '✕';
+                    removeBtn.addEventListener('click', function() {
+                        if (confirm('Remove this task from the library?')) {
+                            playRemove();
+                            bs.tasks.splice(taskIdx, 1);
+                            saveToStorage();
+                            renderPage();
+                        }
+                    });
+                    mainRow.appendChild(removeBtn);
+                    item.appendChild(mainRow);
+                    card.appendChild(item);
+                });
+            }
+
+            const addRow = document.createElement('div');
+            addRow.className = 'bank-add-row';
+            const newInput = document.createElement('input');
+            newInput.type = 'text';
+            newInput.placeholder = 'New task for ' + (bs.name || 'this area') + '…';
+            addRow.appendChild(newInput);
+            const addBtn = document.createElement('button');
+            addBtn.type = 'button';
+            addBtn.textContent = 'Add';
+            addBtn.addEventListener('click', function() {
+                const val = newInput.value.trim();
+                if (!val) return;
+                bs.tasks.push({ id: genId(), text: val, from: '', to: '', links: [], notes: [] });
+                saveToStorage();
+                playAdd();
+                renderPage();
+            });
+            newInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') addBtn.click(); });
+            addRow.appendChild(addBtn);
+            card.appendChild(addRow);
+            return card;
+        }
+
+        // REWARDS PAGE
+        function renderRewardsPage() {
+            const wrap = document.createElement('div');
+            const title = document.createElement('div');
+            title.className = 'rewards-title';
+            title.textContent = '🏆 Milestones';
+            wrap.appendChild(title);
+            const sub = document.createElement('div');
+            sub.className = 'rewards-sub';
+            sub.textContent = 'Every complete day earns a badge. Every badge is proof that you made time for yourself.';
+            wrap.appendChild(sub);
+
+            let earnedCount = 0;
+            for (let d = 0; d < 7; d++) if (badges[d]) earnedCount++;
+
+            const summary = document.createElement('div');
+            summary.className = 'rewards-summary';
+            const stat1 = document.createElement('div');
+            stat1.className = 'rewards-stat';
+            stat1.innerHTML = '<div class="num">' + earnedCount + '</div><div class="label">Badges Earned</div>';
+            summary.appendChild(stat1);
+            const stat2 = document.createElement('div');
+            stat2.className = 'rewards-stat';
+            stat2.innerHTML = '<div class="num">' + earnedCount + '/7</div><div class="label">This Week</div>';
+            summary.appendChild(stat2);
+            wrap.appendChild(summary);
+
+            const badgesGrid = document.createElement('div');
+            badgesGrid.className = 'badges-grid';
+            DAYS.forEach(function(day, d) {
+                const isEarned = !!badges[d];
+                const card = document.createElement('div');
+                card.className = 'badge-card' + (isEarned ? ' earned' : '');
+                card.innerHTML =
+                    '<div class="badge-emoji">' + day.badge + '</div>' +
+                    '<div class="badge-name">' + day.badgeName + '</div>' +
+                    '<div class="badge-day">' + day.emoji + ' ' + day.name + '</div>' +
+                    (isEarned ? '<div class="badge-check">✓</div>' : '<div class="badge-lock">🔒</div>');
+                badgesGrid.appendChild(card);
+            });
+            wrap.appendChild(badgesGrid);
+
+            const giftSection = document.createElement('div');
+            giftSection.className = 'gift-section';
+            const giftTitle = document.createElement('div');
+            giftTitle.className = 'gift-title';
+            giftTitle.textContent = '🌺 Self-Care Milestones';
+            giftSection.appendChild(giftTitle);
+            const giftDesc = document.createElement('div');
+            giftDesc.className = 'gift-desc';
+            giftDesc.textContent = 'Because caring for yourself is not a luxury — it is a necessity.';
+            giftSection.appendChild(giftDesc);
+
+            let nextGift = null, allUnlocked = true;
+            for (let i = 0; i < GIFTS.length; i++) {
+                if (earnedCount < GIFTS[i].required) { nextGift = GIFTS[i]; allUnlocked = false; break; }
+            }
+            if (nextGift) {
+                const progressPct = Math.min(100, Math.round((earnedCount / nextGift.required) * 100));
+                const outer = document.createElement('div');
+                outer.className = 'gift-progress-outer';
+                const inner = document.createElement('div');
+                inner.className = 'gift-progress-inner';
+                inner.style.width = progressPct + '%';
+                outer.appendChild(inner);
+                giftSection.appendChild(outer);
+                const label = document.createElement('div');
+                label.className = 'gift-progress-label';
+                label.textContent = earnedCount + ' of ' + nextGift.required + ' · ' + nextGift.emoji + ' ' + nextGift.name;
+                giftSection.appendChild(label);
+            }
+            GIFTS.forEach(function(gift) {
+                const unlocked = earnedCount >= gift.required;
+                const giftBox = document.createElement('div');
+                giftBox.className = 'gift-unlock';
+                if (!unlocked) { giftBox.style.opacity = '0.5'; giftBox.style.filter = 'grayscale(0.5)'; }
+                giftBox.innerHTML =
+                    '<div class="gift-emoji">' + (unlocked ? gift.emoji : '🔒') + '</div>' +
+                    '<div class="gift-msg">' + (unlocked ? 'Unlocked: ' + gift.name : gift.name) + '</div>' +
+                    '<div class="gift-hint">' + (unlocked ? 'You have earned this.' : gift.hint) + '</div>';
+                giftSection.appendChild(giftBox);
+            });
+            if (allUnlocked && earnedCount >= 7) {
+                const congrats = document.createElement('div');
+                congrats.className = 'gift-unlock';
+                congrats.style.marginTop = '14px';
+                congrats.innerHTML =
+                    '<div class="gift-emoji">🌺</div>' +
+                    '<div class="gift-msg">You are tending to yourself</div>' +
+                    '<div class="gift-hint">That is the most important work of all. 🌿</div>';
+                giftSection.appendChild(congrats);
+            }
+            wrap.appendChild(giftSection);
+            return wrap;
+        }
+
+        // INIT
+        loadFromStorage();
+
+        if (subjectBank.length === 0 && days.length === 7 && days.every(function(d) { return d.length === 0; })) {
+            const seed = [
+                { name: 'Morning Ritual', category: 'mom', tasks: [
+                    { text: 'Warm water with lemon', from: '07:00', to: '07:10' },
+                    { text: '10-min stretch', from: '07:10', to: '07:20' },
+                    { text: 'Mindful breakfast', from: '07:30', to: '08:00' }
+                ]},
+                { name: 'Emma (7)', category: 'kid1', tasks: [
+                    { text: 'School drop-off', from: '08:15', to: '08:45' },
+                    { text: 'Homework check', from: '16:00', to: '16:30' },
+                    { text: 'Bedtime story', from: '19:30', to: '19:50' }
+                ]},
+                { name: 'Leo (5)', category: 'kid2', tasks: [
+                    { text: 'Kindergarten drop-off', from: '08:45', to: '09:00' },
+                    { text: 'Playtime together', from: '16:30', to: '17:00' },
+                    { text: 'Bath & wind-down', from: '18:30', to: '19:00' }
+                ]},
+                { name: 'Mia (3)', category: 'kid3', tasks: [
+                    { text: 'Morning cuddle', from: '07:00', to: '07:15' },
+                    { text: 'Nap time', from: '13:00', to: '14:30' },
+                    { text: 'Bedtime routine', from: '19:00', to: '19:30' }
+                ]},
+                { name: 'Movement & Body', category: 'mom', tasks: [
+                    { text: 'Walk outside', from: '10:00', to: '10:30' },
+                    { text: 'Strength (15 min)', from: '10:30', to: '10:45' }
+                ]},
+                { name: 'Nourishment', category: 'mom', tasks: [
+                    { text: 'Prep a real lunch', from: '12:00', to: '12:30' },
+                    { text: 'Afternoon tea & pause', from: '15:00', to: '15:15' }
+                ]},
+                { name: 'Evening Wind-Down', category: 'mom', tasks: [
+                    { text: 'Skincare & quiet', from: '20:30', to: '20:45' },
+                    { text: 'Read (10 pages)', from: '20:45', to: '21:15' },
+                    { text: 'Lights out', from: '22:00', to: '22:00' }
+                ]}
+            ];
+            seed.forEach(function(s) {
+                subjectBank.push({
+                    id: genId(),
+                    name: s.name,
+                    category: s.category,
+                    tasks: s.tasks.map(function(t) { return { id: genId(), text: t.text, from: t.from || '', to: t.to || '', links: [], notes: [] }; })
+                });
+            });
+
+            // A couple of sample music tracks so the library isn't totally empty
+            const sampleMusic = [
+                { name: 'Morning Light', artist: 'Ambient Calm', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
+                { name: 'Soft Piano', artist: 'Gentle Waves', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' },
+                { name: 'Evening Breeze', artist: 'Rest & Restore', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' }
+            ];
+            sampleMusic.forEach(function(m) {
+                musicLibrary.push({ id: genId(), name: m.name, artist: m.artist, url: m.url });
+            });
+
+            // Monday: a few areas + some music
+            days[0] = [
+                { id: genId(), bankSubjectId: subjectBank[0].id, tasks: [] },
+                { id: genId(), bankSubjectId: subjectBank[1].id, tasks: [] },
+                { id: genId(), bankSubjectId: subjectBank[4].id, tasks: [] }
+            ];
+            days[0].forEach(function(daySubj) {
+                const bank = subjectBank.find(function(b) { return b.id === daySubj.bankSubjectId; });
+                if (bank) {
+                    bank.tasks.forEach(function(t) {
+                        daySubj.tasks.push({
+                            id: genId(),
+                            text: t.text,
+                            done: false,
+                            from: t.from || '',
+                            to: t.to || '',
+                            links: [],
+                            notes: []
+                        });
+                    });
+                }
+            });
+
+            dayMusic[0] = [
+                { id: genId(), musicId: musicLibrary[0].id },
+                { id: genId(), musicId: musicLibrary[2].id }
+            ];
+
+            saveToStorage();
+        }
+
+        if (days.length !== 7) {
+            const fresh = [];
+            for (let i = 0; i < 7; i++) fresh.push(Array.isArray(days[i]) ? days[i] : []);
+            days = fresh;
+        }
+        if (dayMusic.length !== 7) {
+            const fresh = [];
+            for (let i = 0; i < 7; i++) fresh.push(Array.isArray(dayMusic[i]) ? dayMusic[i] : []);
+            dayMusic = fresh;
+        }
+
+        renderNav();
+        renderPage();
+
+        window.addEventListener('beforeunload', saveToStorage);
+        let welcomed = false;
+        document.body.addEventListener('click', function() {
+            if (!welcomed) { getCtx(); welcomed = true; }
+        }, { once: false });
+
+        // Pause any playing audio when page changes
+        window.addEventListener('hashchange', function() {});
+    })();
+    </script>
+</body>
+</html>
